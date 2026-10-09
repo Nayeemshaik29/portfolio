@@ -1,0 +1,106 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { profile } from '../../data/profile';
+import { readingMinutes } from '../../lib/reading';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+const { post, newer, older } = Astro.props;
+const { Content, headings } = await render(post);
+const toc = headings.filter((h) => h.depth === 2);
+const d = post.data;
+const date = d.pubDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base title={d.title} description={d.description} type="article">
+  <article class="container wrap">
+    <header class="head">
+      <a href="/blog" class="back mono">← All posts</a>
+      <div class="chips">{d.tags.map((t) => <span class="chip">#{t}</span>)}</div>
+      <h1>{d.title}</h1>
+      <p class="desc muted">{d.description}</p>
+      <div class="byline">
+        <img src="/avatar.jpg" alt="" width="40" height="40" />
+        <div>
+          <strong>{profile.name}</strong>
+          <span class="mono muted"><time datetime={d.pubDate.toISOString()}>{date}</time> · {readingMinutes(post.body)} min read</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      {toc.length > 2 && (
+        <aside class="toc" aria-label="On this page">
+          <p class="mono">On this page</p>
+          <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+        </aside>
+      )}
+      <div class="prose"><Content /></div>
+    </div>
+
+    <footer class="end">
+      <div class="author card">
+        <img src="/avatar.jpg" alt="" width="56" height="56" />
+        <div>
+          <strong>Written by {profile.name}</strong>
+          <p class="muted">{profile.role} at LTM. I write about the backend problems I run into while building real systems.</p>
+          <div class="chips">
+            <a class="chip" href={profile.links.linkedin} target="_blank" rel="noopener"><Icon name="linkedin" size={14} />&nbsp;LinkedIn</a>
+            <a class="chip" href={profile.links.github} target="_blank" rel="noopener"><Icon name="github" size={14} />&nbsp;GitHub</a>
+          </div>
+        </div>
+      </div>
+      <nav class="pager" aria-label="More posts">
+        {older ? <a class="card" href={`/blog/${older.id}`}><span class="mono muted">← Older</span><strong>{older.data.title}</strong></a> : <span></span>}
+        {newer ? <a class="card right" href={`/blog/${newer.id}`}><span class="mono muted">Newer →</span><strong>{newer.data.title}</strong></a> : <span></span>}
+      </nav>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .wrap { max-width: 1080px; padding-bottom: 80px; }
+  .head { max-width: 780px; padding: clamp(40px, 6vw, 72px) 0 32px; }
+  .back { font-size: .85rem; color: var(--text-muted); display: inline-block; margin-bottom: 22px; }
+  .back:hover { color: var(--accent); }
+  h1 { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 800; letter-spacing: -0.03em; margin: 16px 0 14px; }
+  .desc { font-size: 1.15rem; }
+  .byline { display: flex; align-items: center; gap: 12px; margin-top: 22px; }
+  .byline img { border-radius: 50%; object-fit: cover; }
+  .byline strong { display: block; font-size: .95rem; }
+  .byline span { font-size: .8rem; }
+
+  .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; align-items: start; border-top: 1px solid var(--border); padding-top: 36px; }
+  .layout:not(:has(.toc)) { grid-template-columns: minmax(0, 1fr); }
+  .toc { position: sticky; top: 92px; font-size: .88rem; }
+  .toc p { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 10px; }
+  .toc ol { list-style: none; padding: 0; margin: 0; border-left: 1px solid var(--border); }
+  .toc a { display: block; padding: 6px 0 6px 14px; color: var(--text-muted); margin-left: -1px; border-left: 2px solid transparent; }
+  .toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+
+  .end { max-width: 780px; margin: 56px 0 0 auto; }
+  .author { display: flex; gap: 16px; padding: 22px; }
+  .author:hover { transform: none; }
+  .author img { border-radius: 14px; object-fit: cover; flex: none; }
+  .author p { margin: 6px 0 12px; font-size: .95rem; }
+  .author .chip { display: inline-flex; align-items: center; }
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+  .pager a { padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .pager .right { text-align: right; }
+  .pager strong { font-size: .98rem; line-height: 1.35; }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    .toc { display: none; }
+    .end { margin-left: 0; }
+  }
+  @media (max-width: 600px) { .pager { grid-template-columns: 1fr; } .pager .right { text-align: left; } }
+</style>

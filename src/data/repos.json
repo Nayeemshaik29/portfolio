@@ -1,0 +1,128 @@
+[
+  {
+    "name": "Database-Optimization",
+    "description": "18 in-depth database optimization techniques \u2014 indexing, query tuning, caching, replication, partitioning, and sharding \u2014 explained with real-world analogies, code examples, and architecture diagrams.",
+    "language": null,
+    "url": "https://github.com/Nayeemshaik29/Database-Optimization",
+    "stars": 0,
+    "updated": "2026-09-18",
+    "homepage": null
+  },
+  {
+    "name": "Design_Patterns",
+    "description": "Learning and implementing Design Patterns in Java using real-world scenarios, best practices, and object-oriented design principles.",
+    "language": "Java",
+    "url": "https://github.com/Nayeemshaik29/Design_Patterns",
+    "stars": 0,
+    "updated": "2026-08-03",
+    "homepage": null
+  },
+  {
+    "name": "Interview-DSA-Playbook",
+    "description": "A complete Java DSA interview preparation repository featuring pattern-based learning, optimized solutions, complexity analysis, visual dry runs, and coding interview notes.",
+    "language": "Java",
+    "url": "https://github.com/Nayeemshaik29/Interview-DSA-Playbook",
+    "stars": 0,
+    "updated": "2026-08-03",
+    "homepage": null
+  },
+  {
+    "name": "react-fundamentals",
+    "description": "React fundamentals journey covering JSX, Components, Props, State, Hooks, Rendering Lists, and project-based learning with Vite & Tailwind CSS.",
+    "language": "JavaScript",
+    "url": "https://github.com/Nayeemshaik29/react-fundamentals",
+    "stars": 0,
+    "updated": "2026-02-10",
+    "homepage": null
+  },
+  {
+    "name": "object-oriented-programming",
+    "description": "A complete Object-Oriented Programming (OOP) guide covering concepts from beginner to expert level with real-world examples, tricky programs, and interview-focused explanations in Java.",
+    "language": "Java",
+    "url": "https://github.com/Nayeemshaik29/object-oriented-programming",
+    "stars": 0,
+    "updated": "2026-02-05",
+    "homepage": null
+  },
+  {
+    "name": "CredResolve-Assignment",
+    "description": "Spring Boot + PostgreSQL backend for expense sharing with users, groups, expense splitting, balance calculation, and clean layered architecture.",
+    "language": "Java",
+    "url": "https://github.com/Nayeemshaik29/CredResolve-Assignment",
+    "stars": 0,
+    "updated": "2025-12-18",
+    "homepage": null
+  },
+  {
+    "name": "ManageX",
+    "description": "TaskManagmentSystem made by servlets , Jsp and MySql.",
+    "language": "Java",
+    "url": "https://github.com/Nayeemshaik29/ManageX",
+    "stars": 0,
+    "updated": "2025-10-31",
+    "homepage": null
+  },
+  {
+    "name": "DSA_BLIND_75",
+    "description": "Strivers Blind 75 sheet",
+    "language": "Java",
+    "url": "https://github.com/Nayeemshaik29/DSA_BLIND_75",
+    "stars": 0,
+    "updated": "2025-10-17",
+    "homepage": null
+  },
+  {
+    "name": "DSA",
+    "description": "DSA By NayeemShaik",
+    "language": null,
+    "url": "https://github.com/Nayeemshaik29/DSA",
+    "stars": 3,
+    "updated": "2025-09-04",
+    "homepage": null
+  },
+  {
+    "name": "SpringSecurityAdvanced",
+    "description": "Advance Features in Spring Security",
+    "language": null,
+    "url": "https://github.com/Nayeemshaik29/SpringSecurityAdvanced",
+    "stars": 0,
+    "updated": "2025-08-12",
+    "homepage": null
+  },
+  {
+    "name": "CodegnanConnect",
+    "description": "Branding & Application Platform Using HTML , CSS , BootStrap and JS.",
+    "language": "JavaScript",
+    "url": "https://github.com/Nayeemshaik29/CodegnanConnect",
+    "stars": 0,
+    "updated": "2025-08-09",
+    "homepage": "https://codegnan-connect.vercel.app"
+  },
+  {
+    "name": "Spring-Security",
+    "description": "Spring Security",
+    "language": "Java",
+    "url": "https://github.com/Nayeemshaik29/Spring-Security",
+    "stars": 0,
+    "updated": "2025-08-02",
+    "homepage": null
+  },
+  {
+    "name": "JavaScript",
+    "description": "Basic JavaScript for Beginners",
+    "language": "JavaScript",
+    "url": "https://github.com/Nayeemshaik29/JavaScript",
+    "stars": 0,
+    "updated": "2025-07-11",
+    "homepage": null
+  },
+  {
+    "name": "React",
+    "description": "Chai Aur React",
+    "language": null,
+    "url": "https://github.com/Nayeemshaik29/React",
+    "stars": 0,
+    "updated": "2024-11-29",
+    "homepage": null
+  }
+]

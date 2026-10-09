@@ -1,0 +1,55 @@
+---
+import Icon from './Icon.astro';
+interface Props {
+  slug: string;
+  title: string;
+  tagline: string;
+  summary: string;
+  stack: readonly string[];
+  repo: string;
+  status: string;
+  category: string;
+  index: number;
+}
+const { slug, title, tagline, summary, stack, repo, status, category, index } = Astro.props;
+const hue = ['#34d399', '#22d3ee', '#60a5fa', '#a78bfa', '#f472b6', '#fbbf24'][index % 6];
+---
+<article class="card project reveal" data-category={category} style={`--hue:${hue}`}>
+  <div class="top">
+    <span class="num mono">{String(index + 1).padStart(2, '0')}</span>
+    <span class="chip status">{status}</span>
+  </div>
+  <h3><a href={`/projects/${slug}`} class="stretched">{title}</a></h3>
+  <p class="tagline">{tagline}</p>
+  <p class="summary muted">{summary}</p>
+  <div class="chips">{stack.slice(0, 6).map((s) => <span class="chip">{s}</span>)}</div>
+  <div class="foot">
+    <span class="read">Case study <Icon name="arrow" size={16} /></span>
+    <a class="gh" href={repo} target="_blank" rel="noopener" aria-label={`${title} on GitHub`}><Icon name="github" size={18} /></a>
+  </div>
+</article>
+<style>
+  .project { position: relative; padding: 26px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+  .project::before {
+    content: ''; position: absolute; inset: 0 0 auto 0; height: 3px;
+    background: linear-gradient(90deg, var(--hue), transparent); opacity: .9;
+  }
+  .project::after {
+    content: ''; position: absolute; width: 220px; height: 220px; right: -90px; top: -90px; border-radius: 50%;
+    background: var(--hue); opacity: .07; filter: blur(30px); transition: opacity .3s;
+  }
+  .project:hover::after { opacity: .16; }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .num { color: var(--hue); font-size: .85rem; font-weight: 500; }
+  .status { font-size: .7rem; }
+  h3 { font-size: 1.35rem; font-weight: 700; }
+  .stretched::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+  .tagline { font-weight: 600; color: var(--text); margin: 0; font-size: .98rem; }
+  .summary { margin: 0 0 6px; font-size: .95rem; flex: 1; }
+  .foot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .read { display: inline-flex; align-items: center; gap: 6px; font-size: .9rem; font-weight: 600; color: var(--hue); }
+  .project:hover .read :global(svg) { transform: translateX(4px); }
+  .read :global(svg) { transition: transform .25s var(--ease); }
+  .gh { position: relative; z-index: 2; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: var(--text-muted); }
+  .gh:hover { color: var(--text); background: var(--bg-soft); }
+</style>

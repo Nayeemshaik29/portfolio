@@ -1,0 +1,274 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Icon from '../components/Icon.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PostCard from '../components/PostCard.astro';
+import { profile, moreRepos } from '../data/profile';
+import repos from '../data/repos.json';
+import { readingMinutes } from '../lib/reading';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+const categories = ['All', ...new Set(projects.map((p) => p.data.category))];
+const extra = moreRepos
+  .map((n) => repos.find((r) => r.name === n))
+  .filter((r): r is (typeof repos)[number] => Boolean(r));
+const langColor: Record<string, string> = { Java: '#b07219', JavaScript: '#f1e05a', TypeScript: '#3178c6', Python: '#3572A5' };
+---
+<Base>
+  <Hero />
+
+  <!-- About -->
+  <section id="about" class="section">
+    <div class="container about">
+      <div class="reveal">
+        <p class="eyebrow">About me</p>
+        <h2 class="section-title">Backend engineer with a <span class="gradient-text">security mindset</span>.</h2>
+        {profile.about.map((p) => <p class="muted big">{p}</p>)}
+        <div class="stats">
+          {profile.stats.map((s) => (
+            <div class="stat"><strong class="gradient-text">{s.value}</strong><span>{s.label}</span></div>
+          ))}
+        </div>
+      </div>
+      <div class="side reveal">
+        <div class="card info">
+          <div class="info-row">
+            <span class="ic"><Icon name="cap" /></span>
+            <div>
+              <strong>{profile.education.degree}</strong>
+              <span class="muted">{profile.education.school} · {profile.education.period} · {profile.education.detail}</span>
+            </div>
+          </div>
+          {profile.certifications.map((c) => (
+            <div class="info-row">
+              <span class="ic"><Icon name={c.name.includes('Ethical') ? 'shield' : 'award'} /></span>
+              <div><strong>{c.name}</strong><span class="muted">{c.issuer}</span></div>
+            </div>
+          ))}
+          <div class="info-row">
+            <span class="ic"><Icon name="pin" /></span>
+            <div><strong>{profile.location}</strong><span class="muted">Open to on-site, hybrid & remote · any shift</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="section alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Experience</p>
+        <h2 class="section-title">Where I've worked</h2>
+      </div>
+      <ol class="timeline">
+        {profile.experience.map((e) => (
+          <li class="reveal">
+            <div class="when mono">{e.period}</div>
+            <div class="card job">
+              <h3>{e.role} <span class="at">@ {e.company}</span></h3>
+              <p class="loc muted"><Icon name="pin" size={14} /> {e.location}</p>
+              <ul>{e.points.map((p) => <li>{p}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="section-head head-row reveal">
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2 class="section-title">Systems I've designed and built</h2>
+          <p class="section-lead">Production-style projects focused on correctness, resilience and clean service boundaries — each with an architecture write-up.</p>
+        </div>
+        <div class="filters" role="group" aria-label="Filter projects">
+          {categories.map((c, i) => <button type="button" class:list={['filter', { active: i === 0 }]} data-filter={c}>{c}</button>)}
+        </div>
+      </div>
+      <div class="grid projects-grid" data-projects>
+        {projects.map((p, i) => (
+          <ProjectCard slug={p.id} index={i} {...p.data} />
+        ))}
+      </div>
+
+      <div class="more reveal">
+        <h3>More on GitHub</h3>
+        <div class="grid repo-grid">
+          {extra.map((r) => (
+            <a class="repo card" href={r.url} target="_blank" rel="noopener">
+              <div class="repo-top">
+                <Icon name="github" size={16} />
+                <strong>{r.name.replace(/[-_]/g, ' ')}</strong>
+                <Icon name="external" size={14} class="ext" />
+              </div>
+              <p class="muted">{r.description}</p>
+              {r.language && <span class="lang mono"><i style={`background:${langColor[r.language] ?? '#8b949e'}`}></i>{r.language}</span>}
+            </a>
+          ))}
+        </div>
+        <a class="btn view-all" href={profile.links.github} target="_blank" rel="noopener"><Icon name="github" /> All 40 repositories</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="section alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Toolbox</p>
+        <h2 class="section-title">Tech I work with</h2>
+      </div>
+      <div class="grid skills">
+        {profile.skills.map((g) => (
+          <div class="card skill reveal">
+            <h3>{g.group}</h3>
+            <div class="chips">{g.items.map((s) => <span class="chip">{s}</span>)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section id="blog" class="section">
+    <div class="container">
+      <div class="section-head head-row reveal">
+        <div>
+          <p class="eyebrow">Writing</p>
+          <h2 class="section-title">Notes from building things</h2>
+          <p class="section-lead">Deep dives into the problems I hit while building these systems — and how I solved them.</p>
+        </div>
+        <a class="btn" href="/blog">All posts <Icon name="arrow" /></a>
+      </div>
+      <div class="grid posts">
+        {posts.map((p) => (
+          <PostCard slug={p.id} title={p.data.title} description={p.data.description} date={p.data.pubDate} tags={p.data.tags} minutes={readingMinutes(p.body)} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="contact card reveal">
+        <div class="bg-grid"></div>
+        <p class="eyebrow">Contact</p>
+        <h2 class="section-title">Let's build something reliable.</h2>
+        <p class="section-lead">I'm open to Java backend and full-stack roles. The fastest way to reach me is email or LinkedIn.</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href={`mailto:${profile.email}`}><Icon name="mail" /> {profile.email}</a>
+          <a class="btn" href={profile.links.linkedin} target="_blank" rel="noopener"><Icon name="linkedin" /> LinkedIn</a>
+          <a class="btn" href={profile.links.github} target="_blank" rel="noopener"><Icon name="github" /> GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-projects] > [data-category]');
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      buttons.forEach((x) => x.classList.toggle('active', x === b));
+      const f = b.dataset.filter;
+      cards.forEach((c) => (c.hidden = f !== 'All' && c.dataset.category !== f));
+    }),
+  );
+</script>
+
+<style>
+  .alt { background: linear-gradient(180deg, transparent, var(--bg-soft) 18%, var(--bg-soft) 82%, transparent); }
+  .grid { display: grid; gap: 22px; }
+  .grid > *, .about > *, .timeline > li > * { min-width: 0; }
+  .big { font-size: 1.08rem; }
+
+  .about { display: grid; grid-template-columns: 1.35fr 1fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+  .stat { padding: 18px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-elev); }
+  .stat strong { display: block; font-size: 1.9rem; font-weight: 800; line-height: 1.1; }
+  .stat span { font-size: .85rem; color: var(--text-muted); }
+  .info { padding: 8px 22px; }
+  .info:hover { transform: none; }
+  .info-row { display: flex; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  .info-row:last-child { border: 0; }
+  .info-row strong { display: block; font-size: .98rem; }
+  .info-row span.muted { font-size: .88rem; }
+  .ic { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--bg-soft); color: var(--accent); }
+
+  .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 150px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--accent), var(--accent-3)); opacity: .5; }
+  .timeline > li { display: grid; grid-template-columns: 150px 1fr; gap: 40px; margin-bottom: 26px; position: relative; }
+  .timeline > li::before {
+    content: ''; position: absolute; left: 144px; top: 10px; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--bg); border: 3px solid var(--accent);
+  }
+  .when { font-size: .82rem; color: var(--text-muted); padding-top: 6px; }
+  .job { padding: 24px 26px; }
+  .job h3 { font-size: 1.2rem; }
+  .at { color: var(--accent); font-weight: 600; }
+  .loc { display: flex; align-items: center; gap: 6px; font-size: .88rem; margin: 6px 0 12px; }
+  .job ul { margin: 0; padding-left: 1.1em; color: var(--text-muted); font-size: .97rem; }
+  .job li { margin: .3em 0; }
+  .job li::marker { color: var(--accent); }
+
+  .head-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+  .filters { display: flex; gap: 6px; padding: 5px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg-elev); flex-wrap: wrap; }
+  .filter { border: 0; background: transparent; color: var(--text-muted); padding: 8px 14px; border-radius: 999px; font: 500 .88rem var(--font-sans); cursor: pointer; }
+  .filter.active { background: var(--text); color: var(--bg); }
+  .projects-grid { grid-template-columns: repeat(3, 1fr); }
+  .projects-grid > [hidden] { display: none; }
+
+  .more { margin-top: 64px; }
+  .more h3 { font-size: 1.3rem; margin-bottom: 20px; }
+  .repo-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .repo { padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; border-radius: var(--radius); }
+  .repo-top { display: flex; align-items: center; gap: 8px; }
+  .repo-top strong { font-size: .95rem; flex: 1; text-transform: capitalize; }
+  .repo-top :global(.ext) { color: var(--text-faint); }
+  .repo p { margin: 0; font-size: .88rem; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .lang { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--text-faint); }
+  .lang i { width: 10px; height: 10px; border-radius: 50%; }
+  .view-all { margin-top: 24px; }
+
+  .skills { grid-template-columns: repeat(3, 1fr); }
+  .skill { padding: 24px; }
+  .skill h3 { font-size: 1.02rem; margin-bottom: 14px; }
+
+  .posts { grid-template-columns: repeat(3, 1fr); }
+
+  .contact { position: relative; overflow: hidden; padding: clamp(36px, 6vw, 72px); text-align: center; }
+  .contact:hover { transform: none; }
+  .contact > * { position: relative; }
+  .contact .section-lead { margin-inline: auto; margin-bottom: 28px; }
+  .contact .eyebrow::before { display: none; }
+  .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 1000px) {
+    .projects-grid, .repo-grid, .skills, .posts { grid-template-columns: repeat(2, 1fr); }
+    .about { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 680px) {
+    .projects-grid, .repo-grid, .skills, .posts { grid-template-columns: 1fr; }
+    .stats { gap: 10px; }
+    .filters { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+    .filter { flex: none; }
+    .stat { padding: 14px; }
+    .stat strong { font-size: 1.5rem; }
+    .timeline::before { left: 6px; }
+    .timeline > li { grid-template-columns: 1fr; gap: 10px; padding-left: 30px; }
+    .timeline > li::before { left: 0; top: 6px; }
+    .when { padding-top: 0; }
+    .contact .btn { width: 100%; justify-content: center; white-space: normal; word-break: break-all; }
+  }
+</style>

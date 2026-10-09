@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nayeem-shaik.vercel.app/sitemap-index.xml
