@@ -12,42 +12,42 @@
   --ease: cubic-bezier(.2, .7, .2, 1);
 
   /* light */
-  --bg: #f7f8fb;
+  --bg: #faf7f0;
   --bg-elev: #ffffff;
-  --bg-soft: #eef1f6;
-  --text: #0f172a;
-  --text-muted: #475569;
-  --text-faint: #64748b;
-  --border: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --accent: #059669;
-  --accent-2: #0891b2;
-  --accent-3: #2563eb;
-  --accent-ink: #ffffff;
-  --glow: rgba(5, 150, 105, .14);
-  --shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 8px 24px rgba(15, 23, 42, .06);
-  --shadow-lg: 0 20px 50px rgba(15, 23, 42, .12);
-  --grid-line: rgba(15, 23, 42, .05);
+  --bg-soft: #f2ede2;
+  --text: #1c1a16;
+  --text-muted: #5c5446;
+  --text-faint: #7a7060;
+  --border: #e7dfcf;
+  --border-strong: #d3c7b0;
+  --accent: #8a6a32;
+  --accent-2: #6f5426;
+  --accent-3: #a8854a;
+  --accent-ink: #fffaf0;
+  --glow: rgba(138, 106, 50, .14);
+  --shadow: 0 1px 2px rgba(28, 26, 22, .06), 0 8px 24px rgba(28, 26, 22, .06);
+  --shadow-lg: 0 20px 50px rgba(28, 26, 22, .12);
+  --grid-line: rgba(28, 26, 22, .05);
   color-scheme: light;
 }
 
 :root[data-theme='dark'] {
-  --bg: #070b14;
-  --bg-elev: #0e1422;
-  --bg-soft: #131b2c;
-  --text: #e7edf7;
-  --text-muted: #a3b0c4;
-  --text-faint: #7d8aa0;
-  --border: #1d2638;
-  --border-strong: #2a3650;
-  --accent: #34d399;
-  --accent-2: #22d3ee;
-  --accent-3: #60a5fa;
-  --accent-ink: #04130d;
-  --glow: rgba(52, 211, 153, .16);
+  --bg: #0c0b09;
+  --bg-elev: #15130f;
+  --bg-soft: #1b1813;
+  --text: #f2ece0;
+  --text-muted: #a99f8e;
+  --text-faint: #877e70;
+  --border: #2a2620;
+  --border-strong: #3a342b;
+  --accent: #c9a96e;
+  --accent-2: #b08d57;
+  --accent-3: #e3cfa3;
+  --accent-ink: #14110b;
+  --glow: rgba(201, 169, 110, .16);
   --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px rgba(0, 0, 0, .35);
   --shadow-lg: 0 24px 60px rgba(0, 0, 0, .55);
-  --grid-line: rgba(148, 163, 184, .06);
+  --grid-line: rgba(201, 169, 110, .05);
   color-scheme: dark;
 }
 
@@ -84,11 +84,6 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 }
 
 /* section heading */
-.eyebrow {
-  font-family: var(--font-mono); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--accent); display: inline-flex; align-items: center; gap: .6em; margin-bottom: 14px;
-}
-.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; }
 .section-title { font-size: clamp(1.9rem, 4.2vw, 2.9rem); font-weight: 800; margin-bottom: 14px; }
 .section-lead { color: var(--text-muted); max-width: 640px; font-size: 1.08rem; }
 .section-head { margin-bottom: clamp(36px, 5vw, 56px); }
@@ -175,7 +170,7 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
   color: var(--shiki-dark) !important;
   background-color: var(--shiki-dark-bg) !important;
 }
-:root[data-theme='dark'] .astro-code { background-color: #0d1117 !important; }
+:root[data-theme='dark'] .astro-code { background-color: #100e0b !important; }
 
 /* header icon toggles (icons are child components, so these rules are global) */
 :root[data-theme='dark'] .i-moon, :root[data-theme='light'] .i-sun { display: none; }

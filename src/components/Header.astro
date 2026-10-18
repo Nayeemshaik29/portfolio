@@ -6,6 +6,7 @@ const nav = [
   { href: '/#about', label: 'About' },
   { href: '/#experience', label: 'Experience' },
   { href: '/#projects', label: 'Projects' },
+  { href: '/services', label: 'Services' },
   { href: '/blog', label: 'Blog' },
   { href: '/#contact', label: 'Contact' },
 ];
@@ -22,7 +23,7 @@ const path = Astro.url.pathname;
       <ul>
         {nav.map((n) => (
           <li>
-            <a href={n.href} aria-current={n.href === path || (n.href === '/blog' && path.startsWith('/blog')) ? 'page' : undefined}>
+            <a href={n.href} aria-current={n.href === path || (n.href !== '/' && !n.href.includes('#') && path.startsWith(n.href)) ? 'page' : undefined}>
               {n.label}
             </a>
           </li>

@@ -14,7 +14,6 @@ const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
     <div class="bg-grid"></div>
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Blog</p>
         <h1 class="section-title">Notes from building things</h1>
         <p class="section-lead">Write-ups of the hard parts: keeping money correct across services, event-driven design with Kafka, database performance and shipping with CI/CD.</p>
         <div class="chips tags">{tags.map((t) => <span class="chip">#{t}</span>)}</div>

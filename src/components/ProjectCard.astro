@@ -12,7 +12,7 @@ interface Props {
   index: number;
 }
 const { slug, title, tagline, summary, stack, repo, status, category, index } = Astro.props;
-const hue = ['#34d399', '#22d3ee', '#60a5fa', '#a78bfa', '#f472b6', '#fbbf24'][index % 6];
+const hue = ['#c9a96e', '#b08d57', '#e3cfa3', '#a8854a', '#d8bd86', '#8a6a32'][index % 6];
 ---
 <article class="card project reveal" data-category={category} style={`--hue:${hue}`}>
   <div class="top">

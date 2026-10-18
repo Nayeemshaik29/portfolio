@@ -26,7 +26,6 @@ const langColor: Record<string, string> = { Java: '#b07219', JavaScript: '#f1e05
   <section id="about" class="section">
     <div class="container about">
       <div class="reveal">
-        <p class="eyebrow">About me</p>
         <h2 class="section-title">Backend engineer with a <span class="gradient-text">security mindset</span>.</h2>
         {profile.about.map((p) => <p class="muted big">{p}</p>)}
         <div class="stats">
@@ -63,7 +62,6 @@ const langColor: Record<string, string> = { Java: '#b07219', JavaScript: '#f1e05
   <section id="experience" class="section alt">
     <div class="container">
       <div class="section-head reveal">
-        <p class="eyebrow">Experience</p>
         <h2 class="section-title">Where I've worked</h2>
       </div>
       <ol class="timeline">
@@ -86,7 +84,6 @@ const langColor: Record<string, string> = { Java: '#b07219', JavaScript: '#f1e05
     <div class="container">
       <div class="section-head head-row reveal">
         <div>
-          <p class="eyebrow">Selected work</p>
           <h2 class="section-title">Systems I've designed and built</h2>
           <p class="section-lead">Production-style projects focused on correctness, resilience and clean service boundaries — each with an architecture write-up.</p>
         </div>
@@ -124,7 +121,6 @@ const langColor: Record<string, string> = { Java: '#b07219', JavaScript: '#f1e05
   <section id="skills" class="section alt">
     <div class="container">
       <div class="section-head reveal">
-        <p class="eyebrow">Toolbox</p>
         <h2 class="section-title">Tech I work with</h2>
       </div>
       <div class="grid skills">
@@ -143,7 +139,6 @@ const langColor: Record<string, string> = { Java: '#b07219', JavaScript: '#f1e05
     <div class="container">
       <div class="section-head head-row reveal">
         <div>
-          <p class="eyebrow">Writing</p>
           <h2 class="section-title">Notes from building things</h2>
           <p class="section-lead">Deep dives into the problems I hit while building these systems — and how I solved them.</p>
         </div>
@@ -162,9 +157,8 @@ const langColor: Record<string, string> = { Java: '#b07219', JavaScript: '#f1e05
     <div class="container">
       <div class="contact card reveal">
         <div class="bg-grid"></div>
-        <p class="eyebrow">Contact</p>
         <h2 class="section-title">Let's build something reliable.</h2>
-        <p class="section-lead">I'm open to Java backend and full-stack roles. The fastest way to reach me is email or LinkedIn.</p>
+        <p class="section-lead">I'm open to Java backend and full-stack roles, and I take on <a class="link" href="/services">freelance projects</a> too. The fastest way to reach me is email or LinkedIn.</p>
         <div class="ctas">
           <a class="btn btn-primary" href={`mailto:${profile.email}`}><Icon name="mail" /> {profile.email}</a>
           <a class="btn" href={profile.links.linkedin} target="_blank" rel="noopener"><Icon name="linkedin" /> LinkedIn</a>
@@ -251,7 +245,7 @@ const langColor: Record<string, string> = { Java: '#b07219', JavaScript: '#f1e05
   .contact:hover { transform: none; }
   .contact > * { position: relative; }
   .contact .section-lead { margin-inline: auto; margin-bottom: 28px; }
-  .contact .eyebrow::before { display: none; }
+  .contact .link { color: var(--accent-2); text-decoration: underline; text-underline-offset: 3px; }
   .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
   @media (max-width: 1000px) {
