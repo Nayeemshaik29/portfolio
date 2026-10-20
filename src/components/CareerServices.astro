@@ -8,7 +8,7 @@ interface Props {
 }
 const { showAllLink = false } = Astro.props;
 
-// Stripe Payment Link when configured, otherwise a pre-filled booking email.
+// Razorpay Payment Page when configured, otherwise a pre-filled booking email.
 function bookHref(key: string, title: string, price: string) {
   if (bookingLinks[key]) return bookingLinks[key];
   const subject = 'Booking: ' + title + ' (' + price + ')';
@@ -51,7 +51,7 @@ function bookHref(key: string, title: string, price: string) {
       ))}
     </div>
 
-    <p class="secure reveal"><Icon name="lock" size={15} /> Secure checkout by Stripe · Receipt by email · I reply within 24 hours</p>
+    <p class="secure reveal"><Icon name="lock" size={15} /> Secure checkout by Razorpay · UPI, cards &amp; net banking · Receipt by email · I reply within 24 hours</p>
   </div>
 </section>
 

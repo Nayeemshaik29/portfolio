@@ -1,6 +1,6 @@
-// Stripe Payment Links (Stripe Dashboard → Payment Links → Create). Paste each link here.
-// While a link is empty, its "Book" button falls back to a pre-filled booking email.
-// In each Payment Link set: After payment → "Don't show confirmation page" → redirect to
+// Razorpay Payment Page links (Razorpay Dashboard → Payment Pages → Create). Paste each link here,
+// e.g. 'https://rzp.io/rzp/xxxxxx'. While a link is empty, its "Book" button falls back to a
+// pre-filled booking email. In each Payment Page set "Action after successful payment" → redirect to
 // https://nayeem-shaik.vercel.app/booked so the client lands on the thank-you page.
 export const bookingLinks: Record<string, string> = {
   atsResume: '',
@@ -138,7 +138,7 @@ export const process = [
 export const faqs = [
   {
     q: 'How do payments work?',
-    a: 'Resume and LinkedIn services are paid upfront through secure Stripe checkout. You get a receipt by email and I start right away. For development projects it is 50% upfront and 50% on delivery, split into milestones for larger work.',
+    a: 'Resume and LinkedIn services are paid upfront through secure Razorpay checkout (UPI, cards, net banking or wallets). You get a receipt by email and I start right away. For development projects it is 50% upfront and 50% on delivery, split into milestones for larger work.',
   },
   {
     q: 'What happens after I book a resume or LinkedIn service?',
