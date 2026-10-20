@@ -1,0 +1,93 @@
+---
+import Icon from './Icon.astro';
+import { profile } from '../data/profile';
+import { careerServices, bookingLinks } from '../data/services';
+
+interface Props {
+  showAllLink?: boolean;
+}
+const { showAllLink = false } = Astro.props;
+
+// Stripe Payment Link when configured, otherwise a pre-filled booking email.
+function bookHref(key: string, title: string, price: string) {
+  if (bookingLinks[key]) return bookingLinks[key];
+  const subject = 'Booking: ' + title + ' (' + price + ')';
+  const body =
+    'Hi Nayeem,\n\nI would like to book: ' + title + ' (' + price + ').\n\n' +
+    'Name:\nPhone / WhatsApp:\nTarget role:\nLinkedIn URL:\n\n(Attach your current resume if you have one.)\n';
+  return 'mailto:' + profile.email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+---
+<section id="services" class="section career">
+  <div class="container">
+    <div class="section-head head-row reveal">
+      <div>
+        <p class="eyebrow mono"><span class="dot"></span> Now taking bookings</p>
+        <h2 class="section-title">Get noticed by recruiters, <span class="gradient-text">fast</span>.</h2>
+        <p class="section-lead">I write resumes and LinkedIn profiles the way I'd want to read them as an engineer: clear, honest and full of results. Pick a package and pay securely online.</p>
+      </div>
+      {showAllLink && <a class="btn" href="/services">All services <Icon name="arrow" /></a>}
+    </div>
+
+    <div class="grid cs-grid">
+      {careerServices.map((s) => (
+        <article class:list={['card cs reveal', { featured: s.badge }]}>
+          {s.badge && <span class="badge mono">{s.badge}</span>}
+          <span class="ic"><Icon name={s.icon} size={22} /></span>
+          <h3>{s.title}</h3>
+          <p class="muted blurb">{s.blurb}</p>
+          <div class="price"><strong>{s.price}</strong><span class="once">one-time</span></div>
+          <p class="time"><Icon name="clock" size={15} /> {s.delivery}</p>
+          <ul class="incl">
+            {s.includes.map((i) => <li><Icon name="check" size={16} /> {i}</li>)}
+          </ul>
+          <a
+            class:list={['btn book', { 'btn-primary': s.badge }]}
+            href={bookHref(s.key, s.title, s.price)}
+          >
+            Book now · {s.price}
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <p class="secure reveal"><Icon name="lock" size={15} /> Secure checkout by Stripe · Receipt by email · I reply within 24 hours</p>
+  </div>
+</section>
+
+<style>
+  .career { padding-top: clamp(56px, 8vw, 96px); }
+  .head-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--accent); margin: 0 0 12px; letter-spacing: .04em; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34, 197, 94, .18); }
+  .grid { display: grid; gap: 22px; }
+  .grid > * { min-width: 0; }
+  .cs-grid { grid-template-columns: repeat(3, 1fr); }
+  .cs { position: relative; padding: 28px; display: flex; flex-direction: column; }
+  .cs.featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 18px 48px var(--glow); }
+  .badge {
+    position: absolute; top: 20px; right: 20px; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase;
+    padding: .35em .8em; border-radius: 999px; background: linear-gradient(100deg, var(--accent), var(--accent-2)); color: var(--accent-ink);
+  }
+  .ic { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--bg-soft); color: var(--accent); margin-bottom: 18px; }
+  .cs h3 { font-size: 1.25rem; margin-bottom: 8px; }
+  .blurb { font-size: .95rem; }
+  .price { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; }
+  .price strong { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+  .once { font-size: .82rem; color: var(--text-faint); }
+  .time { display: flex; align-items: center; gap: 6px; font-size: .88rem; color: var(--text-muted); margin: 4px 0 18px; }
+  .incl { list-style: none; padding: 18px 0 0; margin: 0 0 24px; border-top: 1px solid var(--border); display: grid; gap: 10px; font-size: .94rem; flex: 1; }
+  .incl li { display: flex; gap: 10px; align-items: flex-start; }
+  .incl :global(svg) { flex: none; color: var(--accent); margin-top: 4px; }
+  .book { justify-content: center; width: 100%; }
+  .secure { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 28px 0 0; font-size: .88rem; color: var(--text-muted); text-align: center; flex-wrap: wrap; }
+  .secure :global(svg) { color: var(--accent); }
+
+  @media (max-width: 1000px) { .cs-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 680px) {
+    .cs-grid { grid-template-columns: 1fr; }
+    .cs { padding: 22px; }
+    .badge { position: static; align-self: flex-start; margin-bottom: 14px; }
+    .head-row .btn { width: 100%; justify-content: center; }
+  }
+</style>

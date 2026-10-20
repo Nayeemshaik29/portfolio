@@ -1,3 +1,65 @@
+// Stripe Payment Links (Stripe Dashboard → Payment Links → Create). Paste each link here.
+// While a link is empty, its "Book" button falls back to a pre-filled booking email.
+// In each Payment Link set: After payment → "Don't show confirmation page" → redirect to
+// https://nayeem-shaik.vercel.app/booked so the client lands on the thank-you page.
+export const bookingLinks: Record<string, string> = {
+  atsResume: '',
+  linkedin: '',
+  combo: '',
+};
+
+// Fixed-price career services, bookable and payable online. Shown at the top of / and /services.
+export const careerServices = [
+  {
+    key: 'atsResume',
+    icon: 'file',
+    title: 'ATS-Friendly Resume',
+    blurb: 'A clean one-page resume rewritten for your target role, built to pass applicant tracking systems and get shortlisted.',
+    price: '₹500',
+    delivery: 'Delivered in 48 hours',
+    includes: [
+      'Rewritten for the role you are applying to',
+      'Keywords matched to real job descriptions',
+      'ATS-safe one-page layout (PDF + Word)',
+      'Impact-focused bullet points with numbers',
+      '1 free revision',
+    ],
+    badge: '',
+  },
+  {
+    key: 'linkedin',
+    icon: 'linkedin',
+    title: 'LinkedIn Profile Update',
+    blurb: 'A complete LinkedIn makeover so recruiters find you in search and message you first.',
+    price: '₹750',
+    delivery: 'Delivered in 2–3 days',
+    includes: [
+      'Headline and About section that sell you',
+      'Experience and project sections rewritten',
+      'Skills and keywords recruiters search for',
+      'Banner and Featured section suggestions',
+      'Open-to-work and job alert setup tips',
+    ],
+    badge: '',
+  },
+  {
+    key: 'combo',
+    icon: 'star',
+    title: 'Resume + LinkedIn Combo',
+    blurb: 'Both services together, written to tell one consistent story across your resume and profile.',
+    price: '₹1,100',
+    delivery: 'Delivered in 3 days',
+    includes: [
+      'Everything in the ATS Resume package',
+      'Everything in the LinkedIn package',
+      'Matching keywords across both',
+      'Short job-search checklist',
+      'Save ₹150',
+    ],
+    badge: 'Best value',
+  },
+] as const;
+
 // Freelance offerings shown on /services. Prices are "starting from" — edit freely.
 export const services = [
   {
@@ -76,7 +138,11 @@ export const process = [
 export const faqs = [
   {
     q: 'How do payments work?',
-    a: '50% upfront to start, 50% on delivery. For larger projects we split it into milestones. I accept UPI and bank transfer in India, and Upwork / PayPal / Wise internationally.',
+    a: 'Resume and LinkedIn services are paid upfront through secure Stripe checkout. You get a receipt by email and I start right away. For development projects it is 50% upfront and 50% on delivery, split into milestones for larger work.',
+  },
+  {
+    q: 'What happens after I book a resume or LinkedIn service?',
+    a: 'I email you within 24 hours to collect your current resume, LinkedIn link and target roles. You get the first draft within the delivery time shown, and I revise it based on your feedback.',
   },
   {
     q: 'Do I own the code?',

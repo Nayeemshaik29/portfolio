@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { profile } from '../data/profile';
+---
+<Base title="Booking confirmed" description="Thanks for booking. Here is what happens next.">
+  <section class="section done">
+    <div class="bg-grid"></div>
+    <div class="container narrow">
+      <div class="card box">
+        <span class="tick"><Icon name="check" size={30} /></span>
+        <h1 class="section-title">You're booked. <span class="gradient-text">Thank you!</span></h1>
+        <p class="section-lead">Your payment went through and a receipt is on its way to your email. Here's what happens next:</p>
+        <ol class="next">
+          <li><strong>Within 24 hours</strong> I'll email you to collect your current resume, LinkedIn link and target roles.</li>
+          <li><strong>First draft</strong> arrives within the delivery time of your package.</li>
+          <li><strong>Revisions</strong>: tell me what to change and I'll polish it until it's right.</li>
+        </ol>
+        <p class="muted small">Want to speed things up? Send your current resume and target role now.</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href={`mailto:${profile.email}?subject=${encodeURIComponent('My booking details')}`}><Icon name="mail" /> Email my details</a>
+          <a class="btn" href="/">Back to home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .done { position: relative; overflow: hidden; min-height: 70vh; display: grid; align-items: center; }
+  .narrow { position: relative; z-index: 1; max-width: 720px; }
+  .box { padding: clamp(28px, 5vw, 56px); text-align: center; }
+  .box:hover { transform: none; }
+  .tick { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; margin-bottom: 18px;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: var(--accent-ink); }
+  .section-lead { margin-inline: auto; }
+  .next { text-align: left; max-width: 520px; margin: 24px auto; padding-left: 1.2em; display: grid; gap: 12px; color: var(--text-muted); }
+  .next strong { color: var(--text); }
+  .small { font-size: .92rem; }
+  .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+  @media (max-width: 680px) { .ctas .btn { width: 100%; justify-content: center; } }
+</style>

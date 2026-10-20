@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import CareerServices from '../components/CareerServices.astro';
 import { profile } from '../data/profile';
 import { services, process, faqs } from '../data/services';
 
@@ -24,7 +25,8 @@ const mail = (subject: string) =>
         </p>
         <div class="ctas">
           <a class="btn btn-primary" href={mail('Project enquiry')}><Icon name="mail" /> Start a project</a>
-          <a class="btn" href="#packages">See packages <Icon name="arrow" /></a>
+          <a class="btn" href="#services"><Icon name="file" /> Resume &amp; LinkedIn</a>
+          <a class="btn" href="#packages">Development packages <Icon name="arrow" /></a>
         </div>
         <ul class="trust">
           <li><Icon name="check" size={16} /> Fixed quotes, no surprises</li>
@@ -34,6 +36,8 @@ const mail = (subject: string) =>
       </div>
     </div>
   </section>
+
+  <CareerServices />
 
   <section id="packages" class="section packages">
     <div class="container">
