@@ -8,6 +8,8 @@ export const profile = {
     'I build backend systems that stay correct under failure — retries, duplicate messages, slow dependencies and race conditions.',
   location: 'Hyderabad, India',
   email: 'bashanayeem79@gmail.com',
+  // WhatsApp in international format, digits only (country code + number).
+  whatsapp: '918688343878',
   links: {
     github: 'https://github.com/Nayeemshaik29',
     linkedin: 'https://www.linkedin.com/in/nayeem-shaik29/',

@@ -1,0 +1,26 @@
+---
+import { profile } from '../data/profile';
+
+const text = encodeURIComponent("Hi Nayeem, I found your portfolio and I'd like to talk about a service.");
+const href = `https://wa.me/${profile.whatsapp}?text=${text}`;
+---
+<a class="wa" href={href} target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+    <path fill="currentColor" d="M12.04 2a9.93 9.93 0 0 0-8.5 15.07L2 22l5.06-1.5A9.94 9.94 0 1 0 12.04 2Zm0 18.15a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3 .9.9-2.93-.2-.3a8.22 8.22 0 1 1 6.79 3.66Zm4.5-6.15c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.17.25-.64.8-.78.97-.14.16-.29.18-.53.06a6.74 6.74 0 0 1-1.99-1.23 7.46 7.46 0 0 1-1.38-1.71c-.14-.25 0-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.41-.55-.42h-.47a.9.9 0 0 0-.65.31 2.74 2.74 0 0 0-.86 2.04 4.77 4.77 0 0 0 1 2.53 10.9 10.9 0 0 0 4.18 3.69c.58.25 1.04.4 1.39.52.59.18 1.12.16 1.54.1.47-.07 1.46-.6 1.66-1.17.21-.58.21-1.07.15-1.17-.06-.1-.22-.17-.47-.29Z"/>
+  </svg>
+  <span>Chat on WhatsApp</span>
+</a>
+
+<style>
+  .wa {
+    position: fixed; right: 18px; bottom: 18px; z-index: 60; display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 16px 12px 12px; border-radius: 999px; background: #25d366; color: #0b2e16; font-weight: 700; font-size: .92rem;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .28); transition: transform .2s, box-shadow .2s;
+  }
+  .wa:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0, 0, 0, .34); }
+  @media (max-width: 680px) {
+    .wa { padding: 13px; right: 14px; bottom: 14px; }
+    .wa span { display: none; }
+  }
+  @media print { .wa { display: none; } }
+</style>

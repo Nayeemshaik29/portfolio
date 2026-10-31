@@ -2,6 +2,7 @@
 import Icon from './Icon.astro';
 import { profile } from '../data/profile';
 import { careerServices, bookingLinks } from '../data/services';
+import { testimonials } from '../data/feedback';
 
 interface Props {
   showAllLink?: boolean;
@@ -16,6 +17,11 @@ function bookHref(key: string, title: string, price: string) {
     'Hi Nayeem,\n\nI would like to book: ' + title + ' (' + price + ').\n\n' +
     'Name:\nPhone / WhatsApp:\nTarget role:\nLinkedIn URL:\n\n(Attach your current resume if you have one.)\n';
   return 'mailto:' + profile.email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+
+function waHref(title: string, price: string) {
+  const text = 'Hi Nayeem, I am interested in your ' + title + ' (' + price + ') service. Can we talk?';
+  return 'https://wa.me/' + profile.whatsapp + '?text=' + encodeURIComponent(text);
 }
 ---
 <section id="services" class="section career">
@@ -47,11 +53,27 @@ function bookHref(key: string, title: string, price: string) {
           >
             Book now · {s.price}
           </a>
+          <a class="ask" href={waHref(s.title, s.price)} target="_blank" rel="noopener">Questions? Ask on WhatsApp</a>
         </article>
       ))}
     </div>
 
     <p class="secure reveal"><Icon name="lock" size={15} /> Secure checkout by Razorpay · UPI, cards &amp; net banking · Receipt by email · I reply within 24 hours</p>
+
+    {testimonials.length > 0 && (
+      <div class="reviews">
+        <h3 class="reveal">What clients say</h3>
+        <div class="grid rv-grid">
+          {testimonials.map((t) => (
+            <figure class="card rv reveal">
+              <div class="stars" aria-label={`${t.rating} out of 5 stars`}>{'★'.repeat(t.rating)}<span>{'★'.repeat(5 - t.rating)}</span></div>
+              <blockquote>“{t.text}”</blockquote>
+              <figcaption><strong>{t.name}</strong>{t.role && <span class="muted"> · {t.role}</span>}<span class="svc mono">{t.service}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 </section>
 
@@ -80,12 +102,23 @@ function bookHref(key: string, title: string, price: string) {
   .incl li { display: flex; gap: 10px; align-items: flex-start; }
   .incl :global(svg) { flex: none; color: var(--accent); margin-top: 4px; }
   .book { justify-content: center; width: 100%; }
+  .ask { display: block; text-align: center; margin-top: 12px; font-size: .86rem; color: var(--text-muted); }
+  .ask:hover { color: var(--accent-2); text-decoration: underline; text-underline-offset: 3px; }
+  .reviews { margin-top: 56px; }
+  .reviews h3 { font-size: 1.3rem; margin-bottom: 20px; }
+  .rv-grid { grid-template-columns: repeat(3, 1fr); }
+  .rv { margin: 0; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+  .stars { color: #f5b301; letter-spacing: 2px; }
+  .stars span { color: var(--border-strong); }
+  .rv blockquote { margin: 0; font-size: .97rem; flex: 1; }
+  .rv figcaption { font-size: .9rem; display: flex; flex-wrap: wrap; gap: 4px 0; }
+  .svc { display: block; width: 100%; font-size: .76rem; color: var(--text-faint); margin-top: 2px; }
   .secure { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 28px 0 0; font-size: .88rem; color: var(--text-muted); text-align: center; flex-wrap: wrap; }
   .secure :global(svg) { color: var(--accent); }
 
-  @media (max-width: 1000px) { .cs-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 1000px) { .cs-grid, .rv-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 680px) {
-    .cs-grid { grid-template-columns: 1fr; }
+    .cs-grid, .rv-grid { grid-template-columns: 1fr; }
     .cs { padding: 22px; }
     .badge { position: static; align-self: flex-start; margin-bottom: 14px; }
     .head-row .btn { width: 100%; justify-content: center; }

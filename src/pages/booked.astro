@@ -2,6 +2,10 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { profile } from '../data/profile';
+
+const waText =
+  'Hi Nayeem, I just booked a service on your website. Please send my project updates here on WhatsApp.\n\nName:\nService booked:\nPayment ID (from Razorpay receipt):\nTarget role:';
+const waHref = `https://wa.me/${profile.whatsapp}?text=${encodeURIComponent(waText)}`;
 ---
 <Base title="Booking confirmed" description="Thanks for booking. Here is what happens next.">
   <section class="section done">
@@ -12,13 +16,15 @@ import { profile } from '../data/profile';
         <h1 class="section-title">You're booked. <span class="gradient-text">Thank you!</span></h1>
         <p class="section-lead">Your payment went through and a receipt is on its way to your email. Here's what happens next:</p>
         <ol class="next">
-          <li><strong>Within 24 hours</strong> I'll email you to collect your current resume, LinkedIn link and target roles.</li>
+          <li><strong>Get updates on WhatsApp</strong>: tap the green button below, and I'll send every project update (start, first draft, final files) to you there.</li>
+          <li><strong>Within 24 hours</strong> I'll collect your current resume, LinkedIn link and target roles.</li>
           <li><strong>First draft</strong> arrives within the delivery time of your package.</li>
           <li><strong>Revisions</strong>: tell me what to change and I'll polish it until it's right.</li>
         </ol>
         <p class="muted small">Want to speed things up? Send your current resume and target role now.</p>
         <div class="ctas">
-          <a class="btn btn-primary" href={`mailto:${profile.email}?subject=${encodeURIComponent('My booking details')}`}><Icon name="mail" /> Email my details</a>
+          <a class="btn btn-primary wa-btn" href={waHref} target="_blank" rel="noopener">Get updates on WhatsApp</a>
+          <a class="btn" href={`mailto:${profile.email}?subject=${encodeURIComponent('My booking details')}`}><Icon name="mail" /> Email my details</a>
           <a class="btn" href="/">Back to home</a>
         </div>
       </div>
@@ -37,6 +43,7 @@ import { profile } from '../data/profile';
   .next { text-align: left; max-width: 520px; margin: 24px auto; padding-left: 1.2em; display: grid; gap: 12px; color: var(--text-muted); }
   .next strong { color: var(--text); }
   .small { font-size: .92rem; }
+  .wa-btn { background: #25d366; border-color: #25d366; color: #0b2e16; }
   .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
   @media (max-width: 680px) { .ctas .btn { width: 100%; justify-content: center; } }
 </style>

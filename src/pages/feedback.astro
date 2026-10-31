@@ -1,0 +1,141 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { profile } from '../data/profile';
+import { careerServices } from '../data/services';
+import { feedbackConfig } from '../data/feedback';
+
+const services = [...careerServices.map((s) => s.title), 'Development project'];
+---
+<Base title="Client feedback" description="Feedback for clients who booked a service.">
+  <section class="section fb">
+    <div class="container narrow">
+      <div class="card box">
+        <h1 class="section-title">Share your <span class="gradient-text">feedback</span></h1>
+        <p class="section-lead">This page is for clients who booked a service. Enter the feedback code I sent you after delivery.</p>
+
+        <form id="gate" class="gate" data-hashes={JSON.stringify(feedbackConfig.clientCodeHashes)}>
+          <label for="code">Feedback code</label>
+          <div class="row">
+            <input id="code" name="code" placeholder="NS-XXXXXX" autocomplete="off" required />
+            <button class="btn btn-primary" type="submit">Continue</button>
+          </div>
+          <p class="err" id="gate-err" hidden>That code doesn't match a booking. Check the code in my message, or reach me on WhatsApp.</p>
+        </form>
+
+        <form id="fb" class="fb-form" hidden data-key={feedbackConfig.web3formsKey} data-email={profile.email}>
+          <div class="two">
+            <label>Your name<input name="name" required maxlength="80" /></label>
+            <label>Role / college (optional)<input name="role" maxlength="80" placeholder="e.g. Java Developer, KLU '25" /></label>
+          </div>
+          <label>Service you booked
+            <select name="service" required>
+              {services.map((s) => <option>{s}</option>)}
+            </select>
+          </label>
+          <fieldset class="rating">
+            <legend>Rating</legend>
+            {[5, 4, 3, 2, 1].map((n) => (
+              <label class="star"><input type="radio" name="rating" value={n} required checked={n === 5} /> {'★'.repeat(n)}</label>
+            ))}
+          </fieldset>
+          <label>Your feedback<textarea name="message" rows="5" required maxlength="1200" placeholder="What did you like? Did it help you get calls or interviews?"></textarea></label>
+          <label class="check"><input type="checkbox" name="publish" value="yes" /> You can show this feedback (with my name) on your website.</label>
+          <button class="btn btn-primary" type="submit"><Icon name="mail" /> Send feedback</button>
+          <p class="err" id="fb-err" hidden>Couldn't send. Please try again, or message me on WhatsApp.</p>
+        </form>
+
+        <div id="thanks" class="thanks" hidden>
+          <span class="tick"><Icon name="check" size={28} /></span>
+          <h2>Thank you!</h2>
+          <p class="muted">Your feedback means a lot and helps other job seekers trust my work.</p>
+          <a class="btn" href="/">Back to home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const gate = document.querySelector<HTMLFormElement>('#gate')!;
+  const form = document.querySelector<HTMLFormElement>('#fb')!;
+  const thanks = document.querySelector<HTMLElement>('#thanks')!;
+  const hashes: string[] = JSON.parse(gate.dataset.hashes || '[]');
+  let code = '';
+
+  const sha256 = async (s: string) => {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  };
+
+  const open = async (value: string) => {
+    code = value.trim().toUpperCase();
+    const ok = code && hashes.includes(await sha256(code));
+    document.querySelector<HTMLElement>('#gate-err')!.hidden = !!ok;
+    if (ok) { gate.hidden = true; form.hidden = false; }
+  };
+
+  gate.addEventListener('submit', (e) => { e.preventDefault(); open(new FormData(gate).get('code') as string); });
+  const fromUrl = new URLSearchParams(location.search).get('code');
+  if (fromUrl) { (gate.querySelector('#code') as HTMLInputElement).value = fromUrl; open(fromUrl); }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    const summary =
+      `Name: ${d.name}\nRole: ${d.role || '-'}\nService: ${d.service}\nRating: ${d.rating}/5\nOK to publish: ${d.publish ? 'Yes' : 'No'}\nCode: ${code}\n\n${d.message}`;
+    const key = form.dataset.key;
+    if (!key) {
+      location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent('Client feedback: ' + d.name)}&body=${encodeURIComponent(summary)}`;
+      return;
+    }
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: key,
+          subject: `Client feedback: ${d.name} (${d.rating}/5)`,
+          from_name: 'Portfolio feedback',
+          name: d.name, role: d.role, service: d.service, rating: d.rating,
+          publish: d.publish ? 'Yes' : 'No', code, message: d.message,
+        }),
+      });
+      if (!(await res.json()).success) throw new Error('send failed');
+      form.hidden = true; thanks.hidden = false;
+    } catch {
+      document.querySelector<HTMLElement>('#fb-err')!.hidden = false;
+    }
+  });
+</script>
+
+<style>
+  .fb { min-height: 70vh; }
+  .narrow { max-width: 720px; }
+  .box { padding: clamp(24px, 5vw, 48px); }
+  .box:hover { transform: none; }
+  .gate, .fb-form { display: grid; gap: 16px; margin-top: 24px; }
+  [hidden] { display: none !important; }
+  label { display: grid; gap: 6px; font-weight: 600; font-size: .92rem; }
+  input, select, textarea {
+    font: inherit; font-weight: 400; color: var(--text); background: var(--bg-soft); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px; width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .row { display: flex; gap: 10px; }
+  .row input { flex: 1; text-transform: uppercase; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .rating { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; }
+  .rating legend { font-weight: 600; font-size: .92rem; margin-bottom: 6px; }
+  .star { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; color: #f5b301; }
+  .star input, .check input { width: auto; }
+  .check { display: flex; align-items: flex-start; gap: 10px; font-weight: 400; color: var(--text-muted); }
+  .err { color: #e5534b; margin: 0; font-size: .9rem; }
+  .thanks { text-align: center; display: grid; justify-items: center; gap: 8px; margin-top: 16px; }
+  .tick { display: inline-grid; place-items: center; width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: var(--accent-ink); }
+  @media (max-width: 680px) {
+    .two { grid-template-columns: 1fr; }
+    .row { flex-direction: column; }
+  }
+</style>
