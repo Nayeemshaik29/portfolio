@@ -3,9 +3,9 @@
 // pre-filled booking email. In each Payment Page set "Action after successful payment" → redirect to
 // https://nayeem-shaik.vercel.app/booked so the client lands on the thank-you page.
 export const bookingLinks: Record<string, string> = {
-  atsResume: '',
-  linkedin: '',
-  combo: '',
+  atsResume: 'https://rzp.io/rzp/nayeem-ats-resume',
+  linkedin: 'https://rzp.io/rzp/nayeem-linkedin-profile',
+  combo: 'https://rzp.io/rzp/nayeem-resume-linkedin-combo',
 };
 
 // Fixed-price career services, bookable and payable online. Shown at the top of / and /services.
