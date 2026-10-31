@@ -35,7 +35,7 @@ const personLd = {
 };
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,7 +44,7 @@ const personLd = {
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title={`${profile.name} — Blog`} href="/rss.xml" />
-    <meta name="theme-color" content="#0c0b09" />
+    <meta name="theme-color" content="#0a0a0a" />
 
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
@@ -60,23 +60,13 @@ const personLd = {
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
-    />
-
-    <script is:inline>
-      (() => {
-        let t = null;
-        try { t = localStorage.getItem('theme'); } catch (e) {}
-        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-        document.documentElement.dataset.theme = t;
-      })();
-    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&display=swap" />
     <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
   </head>
-  <body>
-    <a href="#main" class="skip">Skip to content</a>
+  <body class="noise min-h-dvh">
+    <a href="#main" class="fixed top-3 left-3 z-[200] -translate-y-20 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition focus:translate-y-0">Skip to content</a>
+    <!-- ambient light at the top of every page -->
+    <div aria-hidden="true" class="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[60vh] bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(255,255,255,.09),transparent)]"></div>
     <Header />
     <main id="main">
       <slot />
@@ -86,6 +76,7 @@ const personLd = {
     <Analytics />
 
     <script>
+      // Scroll reveal for elements with .reveal (optional --d delay in ms via data-delay).
       const io = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
@@ -97,14 +88,19 @@ const personLd = {
         },
         { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
       );
-      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+      document.querySelectorAll<HTMLElement>('.reveal').forEach((el) => {
+        if (el.dataset.delay) el.style.transitionDelay = el.dataset.delay + 'ms';
+        io.observe(el);
+      });
+
+      // Spotlight cards: light follows the cursor.
+      document.addEventListener('pointermove', (e) => {
+        const t = (e.target as HTMLElement | null)?.closest<HTMLElement>('.spotlight');
+        if (!t) return;
+        const r = t.getBoundingClientRect();
+        t.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        t.style.setProperty('--my', `${e.clientY - r.top}px`);
+      }, { passive: true });
     </script>
-    <style>
-      .skip {
-        position: absolute; left: 12px; top: -48px; z-index: 100; padding: 10px 14px; border-radius: 10px;
-        background: var(--accent); color: var(--accent-ink); font-weight: 600; transition: top .2s;
-      }
-      .skip:focus { top: 12px; }
-    </style>
   </body>
 </html>

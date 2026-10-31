@@ -8,7 +8,7 @@ export const bookingLinks: Record<string, string> = {
   combo: 'https://rzp.io/rzp/nayeem-resume-linkedin-combo',
 };
 
-// Fixed-price career services, bookable and payable online. Shown at the top of / and /services.
+// Fixed-price career services, bookable and payable online. Shown on /freelance.
 export const careerServices = [
   {
     key: 'atsResume',
@@ -60,7 +60,7 @@ export const careerServices = [
   },
 ] as const;
 
-// Freelance offerings shown on /services. Prices are "starting from" — edit freely.
+// Freelance offerings shown on /freelance. Prices are "starting from" — edit freely.
 export const services = [
   {
     icon: 'server',

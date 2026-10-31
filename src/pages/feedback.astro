@@ -8,48 +8,52 @@ import { feedbackConfig } from '../data/feedback';
 const services = [...careerServices.map((s) => s.title), 'Development project'];
 ---
 <Base title="Client feedback" description="Feedback for clients who booked a service.">
-  <section class="section fb">
-    <div class="container narrow">
-      <div class="card box">
-        <h1 class="section-title">Share your <span class="gradient-text">feedback</span></h1>
-        <p class="section-lead">This page is for clients who booked a service. Enter the feedback code I sent you after delivery.</p>
+  <section class="relative isolate grid min-h-[75svh] place-items-center overflow-hidden py-16">
+    <div aria-hidden="true" class="bg-grid absolute inset-0 -z-10"></div>
+    <div class="container-x max-w-2xl">
+      <div class="rounded-3xl border bg-card/60 p-7 backdrop-blur sm:p-10 animate-in fade-in zoom-in-95 duration-700">
+        <p class="eyebrow">Clients only</p>
+        <h1 class="mt-5 text-4xl font-semibold tracking-tighter">Share your <span class="text-metal">feedback</span></h1>
+        <p class="mt-3 text-muted-foreground">This page is for clients who booked a service. Enter the feedback code I sent you after delivery.</p>
 
-        <form id="gate" class="gate" data-hashes={JSON.stringify(feedbackConfig.clientCodeHashes)}>
-          <label for="code">Feedback code</label>
-          <div class="row">
-            <input id="code" name="code" placeholder="NS-XXXXXX" autocomplete="off" required />
-            <button class="btn btn-primary" type="submit">Continue</button>
+        <form id="gate" class="mt-8 grid gap-3" data-hashes={JSON.stringify(feedbackConfig.clientCodeHashes)}>
+          <label for="code" class="text-sm font-medium">Feedback code</label>
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <input id="code" name="code" placeholder="NS-XXXXXX" autocomplete="off" required class="field flex-1 uppercase" />
+            <button class="btn-p" type="submit">Continue</button>
           </div>
-          <p class="err" id="gate-err" hidden>That code doesn't match a booking. Check the code in my message, or reach me on WhatsApp.</p>
+          <p class="text-sm text-destructive" id="gate-err" hidden>That code doesn't match a booking. Check the code in my message, or reach me on WhatsApp.</p>
         </form>
 
-        <form id="fb" class="fb-form" hidden data-key={feedbackConfig.web3formsKey} data-email={profile.email}>
-          <div class="two">
-            <label>Your name<input name="name" required maxlength="80" /></label>
-            <label>Role / college (optional)<input name="role" maxlength="80" placeholder="e.g. Java Developer, KLU '25" /></label>
+        <form id="fb" class="mt-8 grid gap-5" hidden data-key={feedbackConfig.web3formsKey} data-email={profile.email}>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <label class="lbl">Your name<input name="name" required maxlength="80" class="field" /></label>
+            <label class="lbl">Role / college (optional)<input name="role" maxlength="80" placeholder="e.g. Java Developer, KLU '25" class="field" /></label>
           </div>
-          <label>Service you booked
-            <select name="service" required>
+          <label class="lbl">Service you booked
+            <select name="service" required class="field">
               {services.map((s) => <option>{s}</option>)}
             </select>
           </label>
-          <fieldset class="rating">
-            <legend>Rating</legend>
-            {[5, 4, 3, 2, 1].map((n) => (
-              <label class="star"><input type="radio" name="rating" value={n} required checked={n === 5} /> {'★'.repeat(n)}</label>
-            ))}
+          <fieldset class="grid gap-2">
+            <legend class="mb-2 text-sm font-medium">Rating</legend>
+            <div class="flex flex-wrap gap-2">
+              {[5, 4, 3, 2, 1].map((n) => (
+                <label class="cursor-pointer rounded-full border px-3 py-1.5 text-sm tracking-widest transition has-[:checked]:border-white/60 has-[:checked]:bg-accent"><input type="radio" name="rating" value={n} required checked={n === 5} class="sr-only" />{'★'.repeat(n)}</label>
+              ))}
+            </div>
           </fieldset>
-          <label>Your feedback<textarea name="message" rows="5" required maxlength="1200" placeholder="What did you like? Did it help you get calls or interviews?"></textarea></label>
-          <label class="check"><input type="checkbox" name="publish" value="yes" /> You can show this feedback (with my name) on your website.</label>
-          <button class="btn btn-primary" type="submit"><Icon name="mail" /> Send feedback</button>
-          <p class="err" id="fb-err" hidden>Couldn't send. Please try again, or message me on WhatsApp.</p>
+          <label class="lbl">Your feedback<textarea name="message" rows="5" required maxlength="1200" placeholder="What did you like? Did it help you get calls or interviews?" class="field"></textarea></label>
+          <label class="flex items-start gap-3 text-sm text-muted-foreground"><input type="checkbox" name="publish" value="yes" class="mt-1 accent-white" /> You can show this feedback (with my name) on your website.</label>
+          <button class="btn-p" type="submit"><Icon name="mail" size={16} /> Send feedback</button>
+          <p class="text-sm text-destructive" id="fb-err" hidden>Couldn't send. Please try again, or message me on WhatsApp.</p>
         </form>
 
-        <div id="thanks" class="thanks" hidden>
-          <span class="tick"><Icon name="check" size={28} /></span>
-          <h2>Thank you!</h2>
-          <p class="muted">Your feedback means a lot and helps other job seekers trust my work.</p>
-          <a class="btn" href="/">Back to home</a>
+        <div id="thanks" class="mt-8 grid justify-items-center gap-3 text-center" hidden>
+          <span class="grid size-14 place-items-center rounded-full bg-primary text-primary-foreground"><Icon name="check" size={26} /></span>
+          <h2 class="text-2xl font-semibold">Thank you!</h2>
+          <p class="text-muted-foreground">Your feedback means a lot and helps other job seekers trust my work.</p>
+          <a class="btn-p" href="/">Back to home</a>
         </div>
       </div>
     </div>
@@ -110,32 +114,8 @@ const services = [...careerServices.map((s) => s.title), 'Development project'];
 </script>
 
 <style>
-  .fb { min-height: 70vh; }
-  .narrow { max-width: 720px; }
-  .box { padding: clamp(24px, 5vw, 48px); }
-  .box:hover { transform: none; }
-  .gate, .fb-form { display: grid; gap: 16px; margin-top: 24px; }
-  [hidden] { display: none !important; }
-  label { display: grid; gap: 6px; font-weight: 600; font-size: .92rem; }
-  input, select, textarea {
-    font: inherit; font-weight: 400; color: var(--text); background: var(--bg-soft); border: 1px solid var(--border);
-    border-radius: 12px; padding: 12px 14px; width: 100%;
-  }
-  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .row { display: flex; gap: 10px; }
-  .row input { flex: 1; text-transform: uppercase; }
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .rating { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; }
-  .rating legend { font-weight: 600; font-size: .92rem; margin-bottom: 6px; }
-  .star { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; color: #f5b301; }
-  .star input, .check input { width: auto; }
-  .check { display: flex; align-items: flex-start; gap: 10px; font-weight: 400; color: var(--text-muted); }
-  .err { color: #e5534b; margin: 0; font-size: .9rem; }
-  .thanks { text-align: center; display: grid; justify-items: center; gap: 8px; margin-top: 16px; }
-  .tick { display: inline-grid; place-items: center; width: 56px; height: 56px; border-radius: 50%;
-    background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: var(--accent-ink); }
-  @media (max-width: 680px) {
-    .two { grid-template-columns: 1fr; }
-    .row { flex-direction: column; }
-  }
+  @reference '../styles/global.css';
+  .field { @apply w-full rounded-xl border border-input bg-background/60 px-4 py-3 text-base font-normal text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-white/40 focus:ring-[3px] focus:ring-ring/30; }
+  .lbl { @apply grid gap-2 text-sm font-medium; }
+  .btn-p { @apply inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 font-medium text-primary-foreground transition hover:-translate-y-0.5; }
 </style>

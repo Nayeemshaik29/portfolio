@@ -2,12 +2,6 @@
 import Icon from './Icon.astro';
 import { profile } from '../data/profile';
 import { careerServices, bookingLinks } from '../data/services';
-import { testimonials } from '../data/feedback';
-
-interface Props {
-  showAllLink?: boolean;
-}
-const { showAllLink = false } = Astro.props;
 
 // Razorpay Payment Page when configured, otherwise a pre-filled booking email.
 function bookHref(key: string, title: string, price: string) {
@@ -18,109 +12,43 @@ function bookHref(key: string, title: string, price: string) {
     'Name:\nPhone / WhatsApp:\nTarget role:\nLinkedIn URL:\n\n(Attach your current resume if you have one.)\n';
   return 'mailto:' + profile.email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
-
 function waHref(title: string, price: string) {
   const text = 'Hi Nayeem, I am interested in your ' + title + ' (' + price + ') service. Can we talk?';
   return 'https://wa.me/' + profile.whatsapp + '?text=' + encodeURIComponent(text);
 }
 ---
-<section id="services" class="section career">
-  <div class="container">
-    <div class="section-head head-row reveal">
-      <div>
-        <p class="eyebrow mono"><span class="dot"></span> Now taking bookings</p>
-        <h2 class="section-title">Get noticed by recruiters, <span class="gradient-text">fast</span>.</h2>
-        <p class="section-lead">I write resumes and LinkedIn profiles the way I'd want to read them as an engineer: clear, honest and full of results. Pick a package and pay securely online.</p>
+<div class="grid gap-5 lg:grid-cols-3">
+  {careerServices.map((s, i) => (
+    <article
+      class:list={[
+        'spotlight reveal relative flex flex-col rounded-2xl border bg-card/60 p-7 transition duration-500 hover:-translate-y-1',
+        s.badge ? 'border-white/25 bg-gradient-to-b from-white/[0.07] to-card/60 shadow-[0_30px_80px_-30px_rgba(255,255,255,.25)]' : 'hover:border-white/20',
+      ]}
+      data-delay={i * 90}
+    >
+      {s.badge && <span class="absolute -top-3 left-7 rounded-full bg-primary px-3 py-0.5 font-mono text-[11px] text-primary-foreground">{s.badge}</span>}
+      <span class="grid size-11 place-items-center rounded-xl border bg-secondary"><Icon name={s.icon} size={20} /></span>
+      <h3 class="mt-5 text-xl font-semibold tracking-tight">{s.title}</h3>
+      <p class="mt-2 text-sm text-muted-foreground">{s.blurb}</p>
+      <div class="mt-6 flex items-baseline gap-2">
+        <span class="text-5xl font-semibold tracking-tighter">{s.price}</span>
+        <span class="text-sm text-muted-foreground">one-time</span>
       </div>
-      {showAllLink && <a class="btn" href="/services">All services <Icon name="arrow" /></a>}
-    </div>
-
-    <div class="grid cs-grid">
-      {careerServices.map((s) => (
-        <article class:list={['card cs reveal', { featured: s.badge }]}>
-          {s.badge && <span class="badge mono">{s.badge}</span>}
-          <span class="ic"><Icon name={s.icon} size={22} /></span>
-          <h3>{s.title}</h3>
-          <p class="muted blurb">{s.blurb}</p>
-          <div class="price"><strong>{s.price}</strong><span class="once">one-time</span></div>
-          <p class="time"><Icon name="clock" size={15} /> {s.delivery}</p>
-          <ul class="incl">
-            {s.includes.map((i) => <li><Icon name="check" size={16} /> {i}</li>)}
-          </ul>
-          <a
-            class:list={['btn book', { 'btn-primary': s.badge }]}
-            href={bookHref(s.key, s.title, s.price)}
-          >
-            Book now · {s.price}
-          </a>
-          <a class="ask" href={waHref(s.title, s.price)} target="_blank" rel="noopener">Questions? Ask on WhatsApp</a>
-        </article>
-      ))}
-    </div>
-
-    <p class="secure reveal"><Icon name="lock" size={15} /> Secure checkout by Razorpay · UPI, cards &amp; net banking · Receipt by email · I reply within 24 hours</p>
-
-    {testimonials.length > 0 && (
-      <div class="reviews">
-        <h3 class="reveal">What clients say</h3>
-        <div class="grid rv-grid">
-          {testimonials.map((t) => (
-            <figure class="card rv reveal">
-              <div class="stars" aria-label={`${t.rating} out of 5 stars`}>{'★'.repeat(t.rating)}<span>{'★'.repeat(5 - t.rating)}</span></div>
-              <blockquote>“{t.text}”</blockquote>
-              <figcaption><strong>{t.name}</strong>{t.role && <span class="muted"> · {t.role}</span>}<span class="svc mono">{t.service}</span></figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-    )}
-  </div>
-</section>
-
-<style>
-  .career { padding-top: clamp(56px, 8vw, 96px); }
-  .head-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
-  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--accent); margin: 0 0 12px; letter-spacing: .04em; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34, 197, 94, .18); }
-  .grid { display: grid; gap: 22px; }
-  .grid > * { min-width: 0; }
-  .cs-grid { grid-template-columns: repeat(3, 1fr); }
-  .cs { position: relative; padding: 28px; display: flex; flex-direction: column; }
-  .cs.featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 18px 48px var(--glow); }
-  .badge {
-    position: absolute; top: 20px; right: 20px; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase;
-    padding: .35em .8em; border-radius: 999px; background: linear-gradient(100deg, var(--accent), var(--accent-2)); color: var(--accent-ink);
-  }
-  .ic { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--bg-soft); color: var(--accent); margin-bottom: 18px; }
-  .cs h3 { font-size: 1.25rem; margin-bottom: 8px; }
-  .blurb { font-size: .95rem; }
-  .price { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; }
-  .price strong { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
-  .once { font-size: .82rem; color: var(--text-faint); }
-  .time { display: flex; align-items: center; gap: 6px; font-size: .88rem; color: var(--text-muted); margin: 4px 0 18px; }
-  .incl { list-style: none; padding: 18px 0 0; margin: 0 0 24px; border-top: 1px solid var(--border); display: grid; gap: 10px; font-size: .94rem; flex: 1; }
-  .incl li { display: flex; gap: 10px; align-items: flex-start; }
-  .incl :global(svg) { flex: none; color: var(--accent); margin-top: 4px; }
-  .book { justify-content: center; width: 100%; }
-  .ask { display: block; text-align: center; margin-top: 12px; font-size: .86rem; color: var(--text-muted); }
-  .ask:hover { color: var(--accent-2); text-decoration: underline; text-underline-offset: 3px; }
-  .reviews { margin-top: 56px; }
-  .reviews h3 { font-size: 1.3rem; margin-bottom: 20px; }
-  .rv-grid { grid-template-columns: repeat(3, 1fr); }
-  .rv { margin: 0; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
-  .stars { color: #f5b301; letter-spacing: 2px; }
-  .stars span { color: var(--border-strong); }
-  .rv blockquote { margin: 0; font-size: .97rem; flex: 1; }
-  .rv figcaption { font-size: .9rem; display: flex; flex-wrap: wrap; gap: 4px 0; }
-  .svc { display: block; width: 100%; font-size: .76rem; color: var(--text-faint); margin-top: 2px; }
-  .secure { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 28px 0 0; font-size: .88rem; color: var(--text-muted); text-align: center; flex-wrap: wrap; }
-  .secure :global(svg) { color: var(--accent); }
-
-  @media (max-width: 1000px) { .cs-grid, .rv-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 680px) {
-    .cs-grid, .rv-grid { grid-template-columns: 1fr; }
-    .cs { padding: 22px; }
-    .badge { position: static; align-self: flex-start; margin-bottom: 14px; }
-    .head-row .btn { width: 100%; justify-content: center; }
-  }
-</style>
+      <p class="mt-2 flex items-center gap-2 font-mono text-xs text-muted-foreground"><Icon name="clock" size={13} /> {s.delivery}</p>
+      <ul class="mt-6 grid flex-1 gap-2.5 text-sm">
+        {s.includes.map((x) => <li class="flex gap-2.5"><Icon name="check" size={16} class="mt-0.5 shrink-0 text-muted-foreground" /> {x}</li>)}
+      </ul>
+      <a
+        href={bookHref(s.key, s.title, s.price)}
+        class:list={[
+          'mt-7 inline-flex h-11 items-center justify-center gap-2 rounded-full font-medium transition hover:-translate-y-0.5',
+          s.badge ? 'bg-primary text-primary-foreground shadow-[0_8px_30px_-8px_rgba(255,255,255,.4)]' : 'border bg-background/40 hover:bg-accent',
+        ]}
+      >Book now · {s.price}</a>
+      <a href={waHref(s.title, s.price)} target="_blank" rel="noopener" class="mt-3 text-center text-xs text-muted-foreground transition hover:text-foreground">Questions? Ask on WhatsApp</a>
+    </article>
+  ))}
+</div>
+<p class="reveal mt-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-sm text-muted-foreground">
+  <Icon name="lock" size={14} /> Secure checkout by Razorpay · UPI, cards &amp; net banking · Receipt by email · Reply within 24 hours
+</p>

@@ -10,26 +10,18 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
 ---
 <Base title="Blog" description="Notes on Java, Spring Boot, Kafka, microservices, databases and CI/CD — written while building real systems.">
-  <section class="section top">
-    <div class="bg-grid"></div>
-    <div class="container">
-      <div class="section-head">
-        <h1 class="section-title">Notes from building things</h1>
-        <p class="section-lead">Write-ups of the hard parts: keeping money correct across services, event-driven design with Kafka, database performance and shipping with CI/CD.</p>
-        <div class="chips tags">{tags.map((t) => <span class="chip">#{t}</span>)}</div>
-      </div>
-      <div class="list">
-        {posts.map((p) => (
-          <PostCard slug={p.id} title={p.data.title} description={p.data.description} date={p.data.pubDate} tags={p.data.tags} minutes={readingMinutes(p.body)} />
+  <section class="relative isolate overflow-hidden pt-16 pb-24 sm:pt-24">
+    <div aria-hidden="true" class="bg-grid absolute inset-0 -z-10"></div>
+    <div class="container-x">
+      <p class="eyebrow animate-in fade-in duration-700">Blog · {posts.length} posts</p>
+      <h1 class="mt-6 max-w-3xl text-5xl font-semibold tracking-tighter text-balance sm:text-6xl animate-in fade-in slide-in-from-bottom-4 duration-700">Notes from <span class="text-metal">building things</span></h1>
+      <p class="lead animate-in fade-in slide-in-from-bottom-4 delay-150 duration-700 fill-mode-both">Write-ups of the hard parts: keeping money correct across services, event-driven design with Kafka, database performance and shipping with CI/CD.</p>
+      <div class="mt-6 flex flex-wrap gap-2">{tags.map((t) => <span class="rounded-full border px-3 py-1 font-mono text-xs text-muted-foreground">#{t}</span>)}</div>
+      <div class="mt-14 grid gap-5 md:grid-cols-2">
+        {posts.map((p, i) => (
+          <PostCard slug={p.id} title={p.data.title} description={p.data.description} date={p.data.pubDate} tags={p.data.tags} minutes={readingMinutes(p.body)} delay={(i % 2) * 80} />
         ))}
       </div>
     </div>
   </section>
 </Base>
-<style>
-  .top { padding-top: clamp(48px, 7vw, 88px); overflow: hidden; }
-  .top .container { position: relative; z-index: 1; }
-  .tags { margin-top: 20px; }
-  .list { display: grid; gap: 20px; grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: 760px) { .list { grid-template-columns: 1fr; } }
-</style>

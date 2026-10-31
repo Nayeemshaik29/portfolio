@@ -1,0 +1,40 @@
+---
+// Home-page teaser that sends visitors to the dedicated /freelance section.
+import Icon from './Icon.astro';
+import { careerServices, services } from '../data/services';
+const items = [
+  ...careerServices.map((s) => ({ t: s.title, p: s.price, icon: s.icon })),
+  ...services.slice(0, 3).map((s) => ({ t: s.title, p: 'from ' + s.price.inr, icon: s.icon })),
+];
+---
+<section id="freelance" class="section-y">
+  <div class="container-x">
+    <div class="reveal relative overflow-hidden rounded-3xl border bg-gradient-to-br from-white/[0.08] via-card/60 to-card/30 p-8 sm:p-12">
+      <div aria-hidden="true" class="bg-grid absolute inset-0 opacity-60"></div>
+      <div aria-hidden="true" class="absolute -top-32 -right-24 size-96 rounded-full bg-white/10 blur-3xl"></div>
+      <div class="relative grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
+        <div>
+          <p class="eyebrow"><Icon name="sparkles" size={13} /> Freelance · now taking bookings</p>
+          <h2 class="h-section mt-5">Need a resume that gets calls, or a backend that ships?</h2>
+          <p class="lead">ATS resumes, LinkedIn makeovers, Spring Boot APIs, AI assistants and CI/CD. Fixed prices, secure Razorpay checkout and updates on WhatsApp.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="/freelance" class="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 font-medium text-primary-foreground transition hover:-translate-y-0.5">Explore freelance services <Icon name="arrow" size={16} /></a>
+            <a href="/freelance#career" class="inline-flex h-12 items-center gap-2 rounded-full border bg-background/40 px-6 font-medium backdrop-blur transition hover:bg-accent">Book from ₹500</a>
+          </div>
+        </div>
+        <ul class="grid gap-2.5">
+          {items.map((x, i) => (
+            <li class="reveal" data-delay={i * 60}>
+              <a href={i < careerServices.length ? '/freelance#career' : '/freelance#packages'} class="group flex items-center gap-4 rounded-xl border bg-background/50 px-4 py-3 backdrop-blur transition hover:border-white/20 hover:bg-accent/60">
+                <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-secondary"><Icon name={x.icon} size={17} /></span>
+                <span class="flex-1 text-sm font-medium">{x.t}</span>
+                <span class="font-mono text-xs text-muted-foreground">{x.p}</span>
+                <Icon name="arrow" size={14} class="text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,181 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CareerServices from '../components/CareerServices.astro';
+import Scene3D from '../components/react/Scene3D';
+import PricingTabs from '../components/react/PricingTabs';
+import Faq from '../components/react/Faq';
+import { profile } from '../data/profile';
+import { services, process, faqs } from '../data/services';
+import { testimonials } from '../data/feedback';
+
+const mail = (subject: string) =>
+  `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+    'Hi Nayeem,\n\nWhat I need:\n\nDeadline / budget (rough is fine):\n\nLinks (site, repo, docs):\n',
+  )}`;
+const wa = `https://wa.me/${profile.whatsapp}?text=${encodeURIComponent("Hi Nayeem, I'd like to talk about a freelance project.")}`;
+const subnav = [
+  ['#career', 'Resume & LinkedIn'],
+  ['#packages', 'Development'],
+  ['#process', 'Process'],
+  ['#faq', 'FAQ'],
+];
+const why = [
+  { icon: 'shield', t: 'Security first', d: 'CEH v12 background: JWT, least privilege and no secrets in code, from day one.' },
+  { icon: 'server', t: 'Production habits', d: 'Idempotency, retries, tests and logs, the same care I put into my microservice systems.' },
+  { icon: 'whatsapp', t: 'Updates on WhatsApp', d: 'You always know where your project stands: start, drafts, demos and delivery.' },
+  { icon: 'lock', t: 'Safe payments', d: 'Razorpay checkout with a receipt by email. Milestones for larger projects.' },
+];
+---
+<Base title="Freelance" description="Book an ATS resume (₹500), a LinkedIn makeover (₹750), or hire me for Spring Boot APIs, AI assistants, CI/CD and websites. Fixed prices and secure Razorpay checkout.">
+  <!-- Hero -->
+  <section class="relative isolate -mt-[68px] overflow-hidden pt-[68px]">
+    <div aria-hidden="true" class="bg-grid absolute inset-0 -z-10"></div>
+    <div class="container-x relative grid min-h-[78svh] items-center gap-6 py-12 lg:grid-cols-[1.15fr_1fr]">
+      <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[50svh] opacity-40 lg:pointer-events-auto lg:static lg:order-2 lg:h-[520px] lg:opacity-100">
+        <Scene3D client:only="react" variant="freelance">
+          <div slot="fallback" class="size-full"></div>
+        </Scene3D>
+      </div>
+      <div class="pt-[22svh] lg:pt-0">
+        <p class="eyebrow animate-in fade-in slide-in-from-bottom-2 duration-700 fill-mode-both">
+          <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60"></span><span class="relative inline-flex size-2 rounded-full bg-success"></span></span>
+          Freelance · taking new clients
+        </p>
+        <h1 class="mt-6 text-[clamp(2.4rem,6.4vw,4.6rem)] leading-[1] font-semibold tracking-tighter text-balance">
+          <span class="block animate-in fade-in slide-in-from-bottom-4 delay-100 duration-700 fill-mode-both">Get hired faster.</span>
+          <span class="text-metal block animate-in fade-in slide-in-from-bottom-4 delay-200 duration-700 fill-mode-both">Ship your backend sooner.</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-lg text-pretty text-muted-foreground animate-in fade-in slide-in-from-bottom-4 delay-300 duration-700 fill-mode-both">
+          Recruiter-ready resumes and LinkedIn profiles for job seekers, and production-grade Spring Boot, AI and DevOps work for founders and teams.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3 animate-in fade-in slide-in-from-bottom-4 delay-500 duration-700 fill-mode-both">
+          <a href="#career" class="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 font-medium text-primary-foreground shadow-[0_8px_30px_-8px_rgba(255,255,255,.4)] transition hover:-translate-y-0.5"><Icon name="file" size={16} /> Book from ₹500</a>
+          <a href="#packages" class="inline-flex h-12 items-center gap-2 rounded-full border bg-background/40 px-6 font-medium backdrop-blur transition hover:-translate-y-0.5 hover:bg-accent"><Icon name="terminal" size={16} /> Development packages</a>
+        </div>
+        <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground animate-in fade-in delay-700 duration-1000 fill-mode-both">
+          <li class="flex items-center gap-2"><Icon name="check" size={15} /> Fixed prices</li>
+          <li class="flex items-center gap-2"><Icon name="check" size={15} /> Reply within 24 hours</li>
+          <li class="flex items-center gap-2"><Icon name="check" size={15} /> You own 100% of the work</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sub navigation -->
+  <nav aria-label="Freelance sections" class="sticky top-[76px] z-40 border-y bg-background/70 backdrop-blur-xl">
+    <div class="container-x flex gap-1 overflow-x-auto py-2">
+      {subnav.map(([h, l]) => <a href={h} class="shrink-0 rounded-full px-4 py-1.5 text-sm text-muted-foreground transition hover:bg-accent hover:text-foreground">{l}</a>)}
+    </div>
+  </nav>
+
+  <!-- Career services -->
+  <section id="career" class="section-y scroll-mt-32">
+    <div class="container-x">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">For job seekers</p>
+        <h2 class="h-section mt-5">Get noticed by recruiters, <span class="text-metal">fast</span>.</h2>
+        <p class="lead mx-auto">I write resumes and LinkedIn profiles the way I'd want to read them as an engineer: clear, honest and full of results. Pick a package and pay securely online.</p>
+      </div>
+      <div class="mt-14"><CareerServices /></div>
+
+      {testimonials.length > 0 && (
+        <div class="mt-20">
+          <h3 class="reveal text-center text-2xl font-semibold tracking-tight">What clients say</h3>
+          <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {testimonials.map((t) => (
+              <figure class="reveal rounded-2xl border bg-card/60 p-6">
+                <div class="tracking-widest" aria-label={`${t.rating} out of 5 stars`}>{'★'.repeat(t.rating)}<span class="text-white/20">{'★'.repeat(5 - t.rating)}</span></div>
+                <blockquote class="mt-3 text-muted-foreground">“{t.text}”</blockquote>
+                <figcaption class="mt-4 text-sm"><strong>{t.name}</strong>{t.role && <span class="text-muted-foreground"> · {t.role}</span>}<span class="mt-1 block font-mono text-xs text-muted-foreground">{t.service}</span></figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Development packages -->
+  <section id="packages" class="section-y scroll-mt-32 border-y bg-card/20">
+    <div class="container-x">
+      <div class="reveal">
+        <p class="eyebrow">For founders &amp; teams</p>
+        <h2 class="h-section mt-5">What I can build for you</h2>
+        <p class="lead">Starting prices for a typical scope. Every project gets a fixed quote after a short call.</p>
+      </div>
+      <div class="mt-10">
+        <PricingTabs client:visible items={services} email={profile.email} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Why me -->
+  <section class="section-y">
+    <div class="container-x">
+      <div class="reveal">
+        <p class="eyebrow">Why work with me</p>
+        <h2 class="h-section mt-5">Engineer-grade care, freelancer speed.</h2>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {why.map((w, i) => (
+          <div class="spotlight reveal rounded-2xl border bg-card/60 p-6 transition hover:-translate-y-1 hover:border-white/20" data-delay={i * 80}>
+            <span class="grid size-11 place-items-center rounded-xl border bg-secondary"><Icon name={w.icon} size={19} /></span>
+            <h3 class="mt-5 font-semibold">{w.t}</h3>
+            <p class="mt-2 text-sm text-muted-foreground">{w.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section id="process" class="section-y scroll-mt-32 border-y bg-card/20">
+    <div class="container-x">
+      <div class="reveal">
+        <p class="eyebrow">How it works</p>
+        <h2 class="h-section mt-5">Simple, transparent process</h2>
+      </div>
+      <ol class="relative mt-12 grid gap-4 md:grid-cols-4">
+        {process.map((p, i) => (
+          <li class="reveal relative rounded-2xl border bg-card/70 p-6 backdrop-blur" data-delay={i * 100}>
+            <span class="grid size-10 place-items-center rounded-full border bg-background font-mono text-sm">0{i + 1}</span>
+            <h3 class="mt-5 font-semibold">{p.title}</h3>
+            <p class="mt-2 text-sm text-muted-foreground">{p.note}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section-y scroll-mt-32">
+    <div class="container-x grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+      <div class="reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="h-section mt-5">Common questions</h2>
+        <p class="lead">Something else on your mind? Just ask. I'm happy to talk it through before you commit to anything.</p>
+      </div>
+      <div class="reveal" data-delay="120"><Faq client:visible items={faqs} /></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-y pt-0">
+    <div class="container-x">
+      <div class="reveal relative overflow-hidden rounded-3xl border bg-card/40 px-6 py-16 text-center sm:px-12 sm:py-20">
+        <div aria-hidden="true" class="bg-grid absolute inset-0"></div>
+        <div aria-hidden="true" class="absolute -bottom-40 left-1/2 size-[520px] -translate-x-1/2 rounded-full bg-white/10 blur-3xl"></div>
+        <div class="relative">
+          <h2 class="mx-auto max-w-3xl text-4xl font-semibold tracking-tighter text-balance sm:text-5xl">Have a project in mind?</h2>
+          <p class="lead mx-auto">Tell me what you're building and when you need it. I'll reply within a day with questions or a rough quote.</p>
+          <div class="mt-9 flex flex-wrap justify-center gap-3">
+            <a href={wa} target="_blank" rel="noopener" class="inline-flex h-12 items-center gap-2 rounded-full bg-[#25d366] px-6 font-medium text-[#06260f] transition hover:-translate-y-0.5"><Icon name="whatsapp" size={17} /> Chat on WhatsApp</a>
+            <a href={mail('Project enquiry')} class="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 font-medium text-primary-foreground transition hover:-translate-y-0.5"><Icon name="mail" size={16} /> Email me</a>
+            <a href={profile.links.linkedin} target="_blank" rel="noopener" class="inline-flex h-12 items-center gap-2 rounded-full border bg-background/40 px-6 font-medium transition hover:bg-accent"><Icon name="linkedin" size={16} /> LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

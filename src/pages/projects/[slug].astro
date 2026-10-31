@@ -12,100 +12,68 @@ export async function getStaticPaths() {
 const { project, next } = Astro.props;
 const { Content } = await render(project);
 const d = project.data;
-const related = (await getCollection('blog', ({ data }) => !data.draft && data.project === project.id));
+const related = await getCollection('blog', ({ data }) => !data.draft && data.project === project.id);
 ---
 <Base title={d.title} description={d.summary}>
   <article>
-    <header class="head">
-      <div class="bg-grid"></div>
-      <div class="container narrow">
-        <a href="/#projects" class="back mono">← All projects</a>
-        <div class="chips top"><span class="chip">{d.category}</span><span class="chip">{d.status}</span></div>
-        <h1>{d.title}</h1>
-        <p class="tagline gradient-text">{d.tagline}</p>
-        <p class="summary muted">{d.summary}</p>
-        <div class="chips">{d.stack.map((s) => <span class="chip">{s}</span>)}</div>
-        <div class="actions">
-          <a class="btn btn-primary" href={d.repo} target="_blank" rel="noopener"><Icon name="github" /> View source on GitHub</a>
+    <header class="relative isolate overflow-hidden border-b pt-14 pb-14 sm:pt-20">
+      <div aria-hidden="true" class="bg-grid absolute inset-0 -z-10"></div>
+      <div class="container-x max-w-4xl">
+        <a href="/#projects" class="font-mono text-xs text-muted-foreground transition hover:text-foreground">← All projects</a>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground">{d.category}</span>
+          <span class="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground">{d.status}</span>
         </div>
+        <h1 class="mt-5 text-5xl font-semibold tracking-tighter sm:text-7xl animate-in fade-in slide-in-from-bottom-4 duration-700">{d.title}</h1>
+        <p class="text-metal mt-4 text-xl font-medium sm:text-2xl">{d.tagline}</p>
+        <p class="mt-4 max-w-3xl text-lg text-muted-foreground">{d.summary}</p>
+        <div class="mt-6 flex flex-wrap gap-1.5">{d.stack.map((s) => <span class="rounded-md bg-secondary px-2 py-0.5 font-mono text-xs">{s}</span>)}</div>
+        <a href={d.repo} target="_blank" rel="noopener" class="mt-8 inline-flex h-11 items-center gap-2 rounded-full bg-primary px-6 font-medium text-primary-foreground transition hover:-translate-y-0.5"><Icon name="github" size={16} /> View source on GitHub</a>
       </div>
     </header>
 
-    <div class="container narrow">
+    <div class="container-x max-w-4xl py-14">
       {d.flow.length > 0 && (
-        <section class="flow-wrap">
-          <h2 class="h">How it flows</h2>
-          <ol class="flow">
+        <section class="mb-14">
+          <h2 class="text-2xl font-semibold tracking-tight">How it flows</h2>
+          <ol class="mt-6 grid gap-3">
             {d.flow.map((f, i) => (
-              <li class="reveal" style={`transition-delay:${i * 60}ms`}>
-                <span class="step mono">{String(i + 1).padStart(2, '0')}</span>
-                <strong>{f.label}</strong>
-                <span class="muted">{f.note}</span>
+              <li class="reveal relative grid grid-cols-[44px_1fr] gap-x-4 rounded-2xl border bg-card/60 p-4" data-delay={i * 60}>
+                <span class="row-span-2 grid size-11 place-items-center rounded-xl border bg-secondary font-mono text-sm">{String(i + 1).padStart(2, '0')}</span>
+                <strong class="font-medium">{f.label}</strong>
+                <span class="text-sm text-muted-foreground">{f.note}</span>
               </li>
             ))}
           </ol>
         </section>
       )}
 
-      <section class="hl">
-        <h2 class="h">Highlights</h2>
-        <ul>{d.highlights.map((h) => <li class="reveal"><Icon name="star" size={16} /> <span>{h}</span></li>)}</ul>
+      <section class="mb-14">
+        <h2 class="text-2xl font-semibold tracking-tight">Highlights</h2>
+        <ul class="mt-6 grid gap-3">
+          {d.highlights.map((h, i) => (
+            <li class="reveal flex gap-3 rounded-xl border bg-card/40 px-4 py-3" data-delay={i * 50}>
+              <Icon name="check" size={16} class="mt-1 shrink-0 text-muted-foreground" /><span>{h}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      <div class="prose"><Content /></div>
+      <div class="prose-site"><Content /></div>
 
       {related.length > 0 && (
-        <section class="related">
-          <h2 class="h">Related writing</h2>
-          <div class="rel-grid">
+        <section class="mt-16">
+          <h2 class="text-2xl font-semibold tracking-tight">Related writing</h2>
+          <div class="mt-6 grid gap-5 sm:grid-cols-2">
             {related.map((p) => <PostCard slug={p.id} title={p.data.title} description={p.data.description} date={p.data.pubDate} tags={p.data.tags} minutes={readingMinutes(p.body)} />)}
           </div>
         </section>
       )}
 
-      <a class="next card" href={`/projects/${next.id}`}>
-        <span class="mono muted">Next project</span>
-        <strong>{next.data.title} <Icon name="arrow" /></strong>
+      <a href={`/projects/${next.id}`} class="group mt-16 flex items-center justify-between rounded-2xl border bg-card/60 p-6 transition hover:border-white/20">
+        <span><span class="block font-mono text-xs text-muted-foreground">Next project</span><strong class="mt-1 block text-2xl font-semibold tracking-tight">{next.data.title}</strong></span>
+        <Icon name="arrow" size={22} class="transition group-hover:translate-x-1" />
       </a>
     </div>
   </article>
 </Base>
-
-<style>
-  .narrow { max-width: 880px; }
-  .head { position: relative; padding: clamp(40px, 7vw, 80px) 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; overflow: hidden; }
-  .head .container { position: relative; z-index: 1; }
-  .back { font-size: .85rem; color: var(--text-muted); }
-  .back:hover { color: var(--accent); }
-  .top { margin: 22px 0 14px; }
-  h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; }
-  .tagline { font-size: clamp(1.1rem, 2.4vw, 1.4rem); font-weight: 700; margin: 10px 0 14px; }
-  .summary { font-size: 1.08rem; max-width: 70ch; }
-  .actions { margin-top: 24px; }
-  .h { font-size: 1.4rem; margin-bottom: 20px; }
-
-  .flow-wrap { margin-bottom: 48px; }
-  .flow { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; counter-reset: s; }
-  .flow li {
-    position: relative; display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; padding: 16px 18px;
-    border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev);
-  }
-  .flow li:not(:last-child)::after {
-    content: ''; position: absolute; left: 39px; bottom: -13px; width: 2px; height: 12px; background: var(--accent); opacity: .6;
-  }
-  .step { grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--bg-soft); color: var(--accent); font-size: .85rem; }
-  .flow strong { font-size: 1rem; }
-  .flow .muted { font-size: .92rem; }
-
-  .hl { margin-bottom: 40px; }
-  .hl ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
-  .hl li { display: flex; gap: 10px; align-items: flex-start; padding: 12px 16px; border-radius: var(--radius); background: var(--bg-soft); }
-  .hl li :global(svg) { flex: none; margin-top: 4px; color: var(--accent); }
-
-  .related { margin-top: 56px; }
-  .rel-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, 1fr); }
-  .next { display: flex; flex-direction: column; gap: 6px; padding: 22px 26px; margin: 64px 0 80px; }
-  .next strong { display: flex; align-items: center; gap: 8px; font-size: 1.2rem; }
-  .next:hover strong { color: var(--accent); }
-  @media (max-width: 680px) { .rel-grid { grid-template-columns: 1fr; } }
-</style>

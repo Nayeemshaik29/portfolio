@@ -1,128 +1,63 @@
 ---
 import Icon from './Icon.astro';
+import MobileNav from './react/MobileNav';
 import { profile } from '../data/profile';
 
 const nav = [
-  { href: '/services', label: 'Services' },
   { href: '/#about', label: 'About' },
   { href: '/#experience', label: 'Experience' },
-  { href: '/#projects', label: 'Projects' },
+  { href: '/#projects', label: 'Work' },
   { href: '/blog', label: 'Blog' },
   { href: '/#contact', label: 'Contact' },
 ];
 const path = Astro.url.pathname;
+const onFreelance = path.startsWith('/freelance');
 ---
-<header class="site-header" data-header>
-  <div class="container bar">
-    <a href="/" class="brand" aria-label={`${profile.name} — home`}>
-      <span class="logo mono">&lt;NS/&gt;</span>
-      <span class="brand-name">{profile.name}</span>
-    </a>
-
-    <nav class="nav" aria-label="Primary" id="primary-nav" data-nav>
-      <ul>
-        {nav.map((n) => (
-          <li>
-            <a href={n.href} aria-current={n.href === path || (n.href !== '/' && !n.href.includes('#') && path.startsWith(n.href)) ? 'page' : undefined}>
-              {n.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <a class="btn btn-primary nav-cta" href="/resume.pdf" target="_blank" rel="noopener">
-        <Icon name="download" /> Resume
+<header class="sticky top-0 z-50 pt-3" data-header>
+  <div class="container-x">
+    <div class="flex h-14 items-center justify-between gap-3 rounded-full border border-transparent px-2 pl-4 transition-all duration-300 [[data-scrolled]_&]:border-border [[data-scrolled]_&]:bg-background/70 [[data-scrolled]_&]:shadow-2xl [[data-scrolled]_&]:backdrop-blur-xl">
+      <a href="/" class="group flex items-center gap-2.5" aria-label={`${profile.name} — home`}>
+        <span class="grid size-8 place-items-center rounded-lg border bg-card font-mono text-[11px] font-bold transition group-hover:rotate-6">NS</span>
+        <span class="hidden font-medium tracking-tight sm:inline">{profile.name}</span>
       </a>
-    </nav>
 
-    <div class="actions">
-      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle colour theme">
-        <Icon name="sun" class="i-sun" />
-        <Icon name="moon" class="i-moon" />
-      </button>
-      <button class="icon-btn menu-btn" type="button" aria-controls="primary-nav" aria-expanded="false" aria-label="Open menu" data-menu>
-        <Icon name="menu" class="i-menu" />
-        <Icon name="close" class="i-close" />
-      </button>
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
+        {nav.map((n) => (
+          <a
+            href={n.href}
+            class:list={[
+              'rounded-full px-3.5 py-1.5 text-sm transition hover:bg-accent hover:text-foreground',
+              n.href === path || (n.href === '/blog' && path.startsWith('/blog')) ? 'text-foreground' : 'text-muted-foreground',
+            ]}
+          >{n.label}</a>
+        ))}
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="/freelance"
+          class:list={[
+            'group relative hidden h-9 items-center gap-2 overflow-hidden rounded-full border px-4 text-sm font-medium transition sm:inline-flex',
+            onFreelance ? 'bg-primary text-primary-foreground' : 'bg-card hover:border-white/25',
+          ]}
+        >
+          <span class="relative flex size-2">
+            <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60"></span>
+            <span class="relative inline-flex size-2 rounded-full bg-success"></span>
+          </span>
+          Freelance
+        </a>
+        <a href="/resume.pdf" target="_blank" rel="noopener" class="hidden h-9 items-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 md:inline-flex">
+          <Icon name="download" size={15} /> Resume
+        </a>
+        <MobileNav client:load items={[{ href: '/', label: 'Home' }, ...nav, { href: '/freelance', label: 'Freelance' }]} path={path} />
+      </div>
     </div>
   </div>
 </header>
 
 <script>
-  const root = document.documentElement;
-  const header = document.querySelector('[data-header]')!;
-  const toggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]')!;
-  const menu = document.querySelector<HTMLButtonElement>('[data-menu]')!;
-  const nav = document.querySelector<HTMLElement>('[data-nav]')!;
-
-  toggle.addEventListener('click', () => {
-    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    root.dataset.theme = next;
-    try { localStorage.setItem('theme', next); } catch {}
-  });
-
-  const setOpen = (open: boolean) => {
-    header.classList.toggle('open', open);
-    menu.setAttribute('aria-expanded', String(open));
-    menu.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    document.body.style.overflow = open ? 'hidden' : '';
-  };
-  menu.addEventListener('click', () => setOpen(!header.classList.contains('open')));
-  nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
-  addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
-
-  const onScroll = () => header.classList.toggle('scrolled', scrollY > 8);
+  const onScroll = () => document.documentElement.toggleAttribute('data-scrolled', scrollY > 8);
   onScroll();
   addEventListener('scroll', onScroll, { passive: true });
 </script>
-
-<style>
-  .site-header {
-    position: sticky; top: 0; z-index: 50; transition: background .3s, border-color .3s, backdrop-filter .3s;
-    border-bottom: 1px solid transparent;
-  }
-  .site-header.scrolled, .site-header.open {
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
-    backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px);
-    border-bottom-color: var(--border);
-  }
-  .site-header.open { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--bg); }
-  .bar { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 16px; }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; }
-  .logo {
-    display: grid; place-items: center; height: 34px; padding: 0 8px; border-radius: 10px; font-size: .78rem; font-weight: 600;
-    background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: var(--accent-ink);
-  }
-  .brand-name { font-size: 1rem; letter-spacing: -0.01em; }
-
-  .nav { display: flex; align-items: center; gap: 22px; }
-  .nav ul { list-style: none; display: flex; gap: 4px; margin: 0; padding: 0; }
-  .nav ul a {
-    padding: 8px 12px; border-radius: 999px; font-size: .94rem; color: var(--text-muted); font-weight: 500;
-    transition: color .2s, background .2s;
-  }
-  .nav ul a:hover, .nav ul a[aria-current='page'] { color: var(--text); background: var(--bg-soft); }
-  .nav-cta { padding: .55em 1em; font-size: .9rem; }
-
-  .actions { display: flex; align-items: center; gap: 6px; }
-  .icon-btn {
-    display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border);
-    background: var(--bg-elev); color: var(--text); cursor: pointer; transition: border-color .2s, transform .2s;
-  }
-  .icon-btn:hover { border-color: var(--accent); }
-  .menu-btn { display: none; }
-
-  @media (max-width: 900px) {
-    .menu-btn { display: grid; }
-    .brand-name { display: none; }
-    .nav {
-      position: fixed; inset: 68px 0 0 0; flex-direction: column; align-items: stretch; gap: 18px;
-      padding: 24px var(--gutter) 40px; background: var(--bg); border-top: 1px solid var(--border);
-      opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .25s, transform .25s, visibility .25s;
-      overflow-y: auto;
-    }
-    .open .nav { opacity: 1; visibility: visible; transform: none; }
-    .nav ul { flex-direction: column; gap: 4px; }
-    .nav ul a { display: block; padding: 14px 12px; font-size: 1.15rem; border-radius: 12px; }
-    .nav-cta { justify-content: center; padding: .9em; font-size: 1rem; }
-  }
-</style>

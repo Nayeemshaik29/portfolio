@@ -6,44 +6,36 @@ import { profile } from '../data/profile';
 const waText =
   'Hi Nayeem, I just booked a service on your website. Please send my project updates here on WhatsApp.\n\nName:\nService booked:\nPayment ID (from Razorpay receipt):\nTarget role:';
 const waHref = `https://wa.me/${profile.whatsapp}?text=${encodeURIComponent(waText)}`;
+const steps = [
+  ['Get updates on WhatsApp', "tap the green button below, and I'll send every project update (start, first draft, final files) to you there."],
+  ['Within 24 hours', "I'll collect your current resume, LinkedIn link and target roles."],
+  ['First draft', 'arrives within the delivery time of your package.'],
+  ['Revisions', "tell me what to change and I'll polish it until it's right."],
+];
 ---
 <Base title="Booking confirmed" description="Thanks for booking. Here is what happens next.">
-  <section class="section done">
-    <div class="bg-grid"></div>
-    <div class="container narrow">
-      <div class="card box">
-        <span class="tick"><Icon name="check" size={30} /></span>
-        <h1 class="section-title">You're booked. <span class="gradient-text">Thank you!</span></h1>
-        <p class="section-lead">Your payment went through and a receipt is on its way to your email. Here's what happens next:</p>
-        <ol class="next">
-          <li><strong>Get updates on WhatsApp</strong>: tap the green button below, and I'll send every project update (start, first draft, final files) to you there.</li>
-          <li><strong>Within 24 hours</strong> I'll collect your current resume, LinkedIn link and target roles.</li>
-          <li><strong>First draft</strong> arrives within the delivery time of your package.</li>
-          <li><strong>Revisions</strong>: tell me what to change and I'll polish it until it's right.</li>
+  <section class="relative isolate grid min-h-[75svh] place-items-center overflow-hidden py-16">
+    <div aria-hidden="true" class="bg-grid absolute inset-0 -z-10"></div>
+    <div class="container-x max-w-2xl">
+      <div class="rounded-3xl border bg-card/60 p-8 text-center backdrop-blur sm:p-12 animate-in fade-in zoom-in-95 duration-700">
+        <span class="mx-auto grid size-16 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0_60px_-10px_rgba(255,255,255,.5)]"><Icon name="check" size={30} /></span>
+        <h1 class="mt-6 text-4xl font-semibold tracking-tighter">You're booked. <span class="text-metal">Thank you!</span></h1>
+        <p class="mt-4 text-muted-foreground">Your payment went through and a receipt is on its way to your email. Here's what happens next:</p>
+        <ol class="mx-auto mt-8 grid max-w-md gap-3 text-left">
+          {steps.map(([t, d], i) => (
+            <li class="flex gap-3 rounded-xl border bg-background/50 p-4 text-sm text-muted-foreground">
+              <span class="grid size-6 shrink-0 place-items-center rounded-full border font-mono text-[11px] text-foreground">{i + 1}</span>
+              <span><strong class="text-foreground">{t}</strong>: {d}</span>
+            </li>
+          ))}
         </ol>
-        <p class="muted small">Want to speed things up? Send your current resume and target role now.</p>
-        <div class="ctas">
-          <a class="btn btn-primary wa-btn" href={waHref} target="_blank" rel="noopener">Get updates on WhatsApp</a>
-          <a class="btn" href={`mailto:${profile.email}?subject=${encodeURIComponent('My booking details')}`}><Icon name="mail" /> Email my details</a>
-          <a class="btn" href="/">Back to home</a>
+        <p class="mt-6 text-sm text-muted-foreground">Want to speed things up? Send your current resume and target role now.</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <a href={waHref} target="_blank" rel="noopener" class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 font-medium text-[#06260f] transition hover:-translate-y-0.5 sm:w-auto"><Icon name="whatsapp" size={17} /> Get updates on WhatsApp</a>
+          <a href={`mailto:${profile.email}?subject=${encodeURIComponent('My booking details')}`} class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border px-6 font-medium transition hover:bg-accent sm:w-auto"><Icon name="mail" size={16} /> Email my details</a>
+          <a href="/" class="inline-flex h-11 w-full items-center justify-center rounded-full px-6 font-medium text-muted-foreground transition hover:text-foreground sm:w-auto">Back to home</a>
         </div>
       </div>
     </div>
   </section>
 </Base>
-
-<style>
-  .done { position: relative; overflow: hidden; min-height: 70vh; display: grid; align-items: center; }
-  .narrow { position: relative; z-index: 1; max-width: 720px; }
-  .box { padding: clamp(28px, 5vw, 56px); text-align: center; }
-  .box:hover { transform: none; }
-  .tick { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; margin-bottom: 18px;
-    background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: var(--accent-ink); }
-  .section-lead { margin-inline: auto; }
-  .next { text-align: left; max-width: 520px; margin: 24px auto; padding-left: 1.2em; display: grid; gap: 12px; color: var(--text-muted); }
-  .next strong { color: var(--text); }
-  .small { font-size: .92rem; }
-  .wa-btn { background: #25d366; border-color: #25d366; color: #0b2e16; }
-  .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
-  @media (max-width: 680px) { .ctas .btn { width: 100%; justify-content: center; } }
-</style>
