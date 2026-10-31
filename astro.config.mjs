@@ -9,7 +9,7 @@ const site = process.env.SITE_URL ?? 'https://nayeem-shaik.vercel.app';
 
 export default defineConfig({
   site,
-  integrations: [react(), sitemap()],
+  integrations: [react(), sitemap({ filter: (page) => !page.includes('/admin') })],
   vite: { plugins: [tailwindcss()] },
   // Freelancing has its own section now; keep the old URL working.
   redirects: { '/services': '/freelance' },

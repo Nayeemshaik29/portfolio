@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Visitors" description="Private.">
+  <meta slot="head" name="robots" content="noindex,nofollow" />
+  <section class="container-x min-h-[70svh] max-w-3xl py-16 sm:py-24">
+    <p class="eyebrow">Private · only you</p>
+    <h1 class="mt-5 text-4xl font-semibold tracking-tighter">Who visited</h1>
+
+    <form id="login" class="mt-8 flex max-w-sm gap-2">
+      <input id="pin" type="password" required autocomplete="current-password" placeholder="Admin PIN" aria-label="Admin PIN" class="flex-1 rounded-xl border border-input bg-background/60 px-4 py-3 text-sm outline-none focus:border-white/40 focus:ring-[3px] focus:ring-ring/30" />
+      <button class="h-12 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground" type="submit">Unlock</button>
+    </form>
+    <p id="msg" class="mt-3 text-sm text-destructive" hidden></p>
+
+    <div id="panel" hidden class="mt-10">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <p id="count" class="font-mono text-sm text-muted-foreground"></p>
+        <div class="flex gap-2">
+          <button id="csv" class="h-9 rounded-full border px-4 text-sm transition hover:bg-accent">Download CSV</button>
+          <button id="lock" class="h-9 rounded-full border px-4 text-sm transition hover:bg-accent">Lock</button>
+        </div>
+      </div>
+      <ul id="list" class="mt-5 grid gap-3"></ul>
+      <p id="empty" hidden class="rounded-2xl border bg-card/60 p-6 text-muted-foreground">No names yet. They'll show up here when visitors say hi.</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  type V = { id: string; name: string; org: string; page: string; country: string; at: string };
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  let pin = '';
+  let rows: V[] = [];
+
+  const api = (body: object) =>
+    fetch('/api/admin', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin, ...body }) });
+
+  const flag = (c: string) => (c && c.length === 2 ? String.fromCodePoint(...[...c.toUpperCase()].map((x) => 127397 + x.charCodeAt(0))) : '🌐');
+
+  function render() {
+    $('#count').textContent = `${rows.length} visitor${rows.length === 1 ? '' : 's'} said hi`;
+    $('#empty').hidden = rows.length > 0;
+    const ul = $('#list');
+    ul.replaceChildren(
+      ...rows.map((v) => {
+        const li = document.createElement('li');
+        li.className = 'flex items-start gap-4 rounded-2xl border bg-card/60 p-4';
+        const f = document.createElement('span'); f.className = 'text-2xl'; f.textContent = flag(v.country);
+        const m = document.createElement('div'); m.className = 'min-w-0 flex-1';
+        const n = document.createElement('p'); n.className = 'font-medium break-words'; n.textContent = v.name;
+        const o = document.createElement('p'); o.className = 'text-sm text-muted-foreground break-words'; o.textContent = v.org || 'No company given';
+        const t = document.createElement('p'); t.className = 'mt-1 font-mono text-xs text-muted-foreground';
+        t.textContent = `${new Date(v.at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })} · ${v.page || '/'}`;
+        m.append(n, o, t);
+        const d = document.createElement('button');
+        d.className = 'rounded-full px-3 py-1 text-xs text-muted-foreground transition hover:bg-accent hover:text-foreground';
+        d.textContent = 'Delete';
+        d.addEventListener('click', async () => {
+          if (!confirm(`Delete ${v.name}?`)) return;
+          await api({ action: 'delete', id: v.id });
+          rows = rows.filter((x) => x.id !== v.id);
+          render();
+        });
+        li.append(f, m, d);
+        return li;
+      }),
+    );
+  }
+
+  $('#login').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    pin = $<HTMLInputElement>('#pin').value;
+    const msg = $('#msg'); msg.hidden = true;
+    try {
+      const r = await api({ action: 'list' });
+      if (r.status === 503) throw new Error('Not set up yet: add the Upstash keys and ADMIN_PIN in Vercel.');
+      if (r.status === 429) throw new Error('Too many tries. Wait an hour.');
+      if (!r.ok) throw new Error('Wrong PIN.');
+      rows = (await r.json()).visitors;
+      try { localStorage.setItem('hi-done', '1'); } catch {} // stop prompting yourself
+      $('#login').hidden = true; $('#panel').hidden = false;
+      render();
+    } catch (err) {
+      msg.textContent = (err as Error).message || 'Something went wrong.';
+      msg.hidden = false;
+    }
+  });
+
+  $('#lock').addEventListener('click', () => { pin = ''; rows = []; location.reload(); });
+
+  $('#csv').addEventListener('click', () => {
+    const q = (s: string) => `"${String(s).replace(/"/g, '""').replace(/^([=+\-@])/, "'$1")}"`;
+    const csv = ['name,company,country,page,time', ...rows.map((v) => [v.name, v.org, v.country, v.page, v.at].map(q).join(','))].join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = 'visitors.csv';
+    a.click();
+  });
+</script>

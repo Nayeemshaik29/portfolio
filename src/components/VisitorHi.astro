@@ -1,0 +1,58 @@
+---
+// Optional, skippable prompt. Only people who choose to fill it in are recorded.
+---
+<div id="hi" hidden role="dialog" aria-labelledby="hi-title" class="fixed bottom-4 left-4 z-[65] w-[calc(100vw-2rem)] max-w-sm rounded-2xl border bg-card/90 p-5 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-500 print:hidden">
+  <button type="button" data-hi-close aria-label="Close" class="absolute top-3 right-3 grid size-7 place-items-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground">✕</button>
+  <form id="hi-form" class="grid gap-3" autocomplete="off">
+    <div>
+      <p id="hi-title" class="pr-6 font-semibold">Hi, thanks for visiting 👋</p>
+      <p class="mt-1 text-sm text-muted-foreground">Mind telling me who you are? It's optional, and only I can see it.</p>
+    </div>
+    <input name="name" required minlength="2" maxlength="80" placeholder="Your name" aria-label="Your name" class="rounded-xl border border-input bg-background/60 px-3.5 py-2.5 text-sm outline-none transition focus:border-white/40 focus:ring-[3px] focus:ring-ring/30" />
+    <input name="org" maxlength="100" placeholder="Company / role (optional)" aria-label="Company or role (optional)" class="rounded-xl border border-input bg-background/60 px-3.5 py-2.5 text-sm outline-none transition focus:border-white/40 focus:ring-[3px] focus:ring-ring/30" />
+    <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="absolute -left-[9999px] size-0 opacity-0" />
+    <div class="flex items-center gap-2">
+      <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5">Say hi</button>
+      <button type="button" data-hi-close class="h-10 rounded-full px-4 text-sm text-muted-foreground transition hover:text-foreground">No thanks</button>
+    </div>
+    <p id="hi-err" hidden class="text-xs text-destructive">Couldn't save that. No worries, you can skip it.</p>
+  </form>
+  <p id="hi-done" hidden class="py-2 pr-6 text-sm">Thanks for saying hi! 🙌 Feel free to look around.</p>
+</div>
+
+<script>
+  const box = document.querySelector<HTMLElement>('#hi');
+  const KEY = 'hi-done';
+  const get = () => { try { return localStorage.getItem(KEY); } catch { return '1'; } };
+  const set = () => { try { localStorage.setItem(KEY, '1'); } catch {} };
+
+  if (box && !get() && !location.pathname.startsWith('/admin')) {
+    setTimeout(() => { if (!get()) box.hidden = false; }, 8000);
+
+    const close = () => { box.hidden = true; set(); };
+    box.querySelectorAll('[data-hi-close]').forEach((b) => b.addEventListener('click', close));
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && !box.hidden) close(); });
+
+    const form = box.querySelector<HTMLFormElement>('#hi-form')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = new FormData(form);
+      const err = box.querySelector<HTMLElement>('#hi-err')!;
+      err.hidden = true;
+      try {
+        const r = await fetch('/api/hi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: f.get('name'), org: f.get('org'), website: f.get('website'), page: location.pathname }),
+        });
+        if (!r.ok) throw new Error();
+        set();
+        form.hidden = true;
+        box.querySelector<HTMLElement>('#hi-done')!.hidden = false;
+        setTimeout(() => (box.hidden = true), 3500);
+      } catch {
+        err.hidden = false;
+      }
+    });
+  }
+</script>
