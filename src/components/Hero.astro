@@ -9,14 +9,36 @@ const stack = ['Java', 'Spring Boot', 'Microservices', 'Apache Kafka', 'PostgreS
   <div aria-hidden="true" class="bg-grid absolute inset-0 -z-10"></div>
 
   <div class="container-x relative grid min-h-[calc(100svh-68px)] items-center gap-6 pb-16 lg:grid-cols-[1.05fr_1fr]">
-    <!-- 3D: behind the text on phones, beside it on desktop -->
-    <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[62svh] opacity-50 lg:pointer-events-auto lg:static lg:order-2 lg:h-[620px] lg:opacity-100">
-      <Scene3D client:only="react" variant="hero">
-        <div slot="fallback" class="size-full"></div>
-      </Scene3D>
+    <!-- Photo with the 3D scene orbiting it: on top on phones, beside the text on desktop -->
+    <div class="absolute inset-x-0 top-0 h-[400px] lg:relative lg:order-2 lg:h-[620px]">
+      <div class="pointer-events-none absolute inset-0 opacity-70 lg:pointer-events-auto lg:opacity-100">
+        <Scene3D client:only="react" variant="hero">
+          <div slot="fallback" class="size-full"></div>
+        </Scene3D>
+      </div>
+      <figure class="pointer-events-none absolute w-max top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-in fade-in zoom-in-90 delay-300 duration-1000 fill-mode-both">
+        <div class="relative">
+          <div aria-hidden="true" class="absolute -inset-6 rounded-full bg-white/15 blur-3xl"></div>
+          <div class="relative rounded-full bg-gradient-to-br from-white/70 via-white/10 to-white/50 p-[3px] shadow-[0_30px_100px_-20px_rgba(255,255,255,.35)]">
+            <img
+              src="/avatar.jpg"
+              alt={`Photo of ${profile.name}`}
+              width="460"
+              height="460"
+              loading="eager"
+              fetchpriority="high"
+              class="size-48 max-w-none rounded-full border-4 border-background object-cover lg:size-80"
+            />
+          </div>
+          <figcaption class="absolute -bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border bg-background/85 px-4 py-2 text-xs font-medium whitespace-nowrap shadow-2xl backdrop-blur-xl lg:-bottom-6 lg:text-sm">
+            <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60"></span><span class="relative inline-flex size-2 rounded-full bg-success"></span></span>
+            {profile.name} · Java Backend Engineer
+          </figcaption>
+        </div>
+      </figure>
     </div>
 
-    <div class="pt-[30svh] lg:pt-0">
+    <div class="relative z-10 pt-[400px] lg:pt-0">
       <p class="eyebrow animate-in fade-in slide-in-from-bottom-2 duration-700 fill-mode-both">
         <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60"></span><span class="relative inline-flex size-2 rounded-full bg-success"></span></span>
         Open to backend roles &amp; freelance · {profile.location}
@@ -33,13 +55,7 @@ const stack = ['Java', 'Spring Boot', 'Microservices', 'Apache Kafka', 'PostgreS
         <a href="/freelance" class="inline-flex h-12 items-center gap-2 rounded-full border bg-background/40 px-6 font-medium backdrop-blur transition hover:-translate-y-0.5 hover:bg-accent"><Icon name="sparkles" size={16} /> Hire me / Freelance</a>
         <a href="/resume.pdf" target="_blank" rel="noopener" class="inline-flex h-12 items-center gap-2 rounded-full px-4 font-medium text-muted-foreground transition hover:text-foreground"><Icon name="download" size={16} /> Resume</a>
       </div>
-      <div class="mt-10 flex items-center gap-4 animate-in fade-in delay-700 duration-1000 fill-mode-both">
-        <img src="/avatar.jpg" alt="" width="44" height="44" class="size-11 rounded-full border object-cover grayscale" />
-        <div class="text-sm leading-tight">
-          <p class="font-medium">{profile.name}</p>
-          <p class="font-mono text-xs text-muted-foreground">Associate SWE @ LTM · KL University '25</p>
-        </div>
-      </div>
+      <p class="mt-10 font-mono text-xs text-muted-foreground animate-in fade-in delay-700 duration-1000 fill-mode-both">Associate Software Engineer @ LTM · KL University '25 · CEH v12 · AWS CCP</p>
     </div>
   </div>
 

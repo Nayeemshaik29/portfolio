@@ -29,7 +29,7 @@ const date = d.pubDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'lon
       <h1 class="mt-5 text-4xl leading-[1.05] font-semibold tracking-tighter text-balance sm:text-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">{d.title}</h1>
       <p class="mt-5 text-lg text-muted-foreground">{d.description}</p>
       <div class="mt-7 flex items-center gap-3">
-        <img src="/avatar.jpg" alt="" width="40" height="40" class="size-10 rounded-full border object-cover grayscale" />
+        <img src="/avatar.jpg" alt="" width="40" height="40" class="size-10 rounded-full border object-cover" />
         <div class="text-sm leading-tight">
           <p class="font-medium">{profile.name}</p>
           <p class="font-mono text-xs text-muted-foreground"><time datetime={d.pubDate.toISOString()}>{date}</time> · {readingMinutes(post.body)} min read</p>
@@ -53,7 +53,7 @@ const date = d.pubDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'lon
 
     <footer class="mx-auto mt-16 max-w-3xl">
       <div class="flex gap-4 rounded-2xl border bg-card/60 p-6">
-        <img src="/avatar.jpg" alt="" width="56" height="56" class="size-14 shrink-0 rounded-xl object-cover grayscale" />
+        <img src="/avatar.jpg" alt="" width="56" height="56" class="size-14 shrink-0 rounded-xl object-cover" />
         <div>
           <p class="font-medium">Written by {profile.name}</p>
           <p class="mt-1 text-sm text-muted-foreground">{profile.role} at LTM. I write about the backend problems I run into while building real systems.</p>
