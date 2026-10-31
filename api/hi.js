@@ -18,6 +18,7 @@ export default async function handler(req, res) {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       name,
       org: clean(body.org, 100),
+      public: body.public === true,
       page: clean(body.page, 120),
       country: clean(req.headers['x-vercel-ip-country'], 4),
       at: new Date().toISOString(),

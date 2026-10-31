@@ -6,10 +6,11 @@
   <form id="hi-form" class="grid gap-3" autocomplete="off">
     <div>
       <p id="hi-title" class="pr-6 font-semibold">Hi, thanks for visiting 👋</p>
-      <p class="mt-1 text-sm text-muted-foreground">Mind telling me who you are? It's optional, and only I can see it.</p>
+      <p class="mt-1 text-sm text-muted-foreground">Mind telling me who you are? It's optional, and only I can see it unless you tick the box below.</p>
     </div>
     <input name="name" required minlength="2" maxlength="80" placeholder="Your name" aria-label="Your name" class="rounded-xl border border-input bg-background/60 px-3.5 py-2.5 text-sm outline-none transition focus:border-white/40 focus:ring-[3px] focus:ring-ring/30" />
     <input name="org" maxlength="100" placeholder="Company / role (optional)" aria-label="Company or role (optional)" class="rounded-xl border border-input bg-background/60 px-3.5 py-2.5 text-sm outline-none transition focus:border-white/40 focus:ring-[3px] focus:ring-ring/30" />
+    <label class="flex items-start gap-2 text-xs text-muted-foreground"><input type="checkbox" name="public" class="mt-0.5 accent-white" /> Show my name (and company) on the visitors wall of this website</label>
     <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="absolute -left-[9999px] size-0 opacity-0" />
     <div class="flex items-center gap-2">
       <button type="submit" class="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5">Say hi</button>
@@ -43,7 +44,7 @@
         const r = await fetch('/api/hi', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: f.get('name'), org: f.get('org'), website: f.get('website'), page: location.pathname }),
+          body: JSON.stringify({ name: f.get('name'), org: f.get('org'), website: f.get('website'), public: f.get('public') === 'on', page: location.pathname }),
         });
         if (!r.ok) throw new Error();
         set();
@@ -55,4 +56,12 @@
       }
     });
   }
+
+  // Count this visit once per browser tab session (a number only; nothing about you is stored).
+  try {
+    if (!sessionStorage.getItem('counted') && !localStorage.getItem('owner') && !location.pathname.startsWith('/admin')) {
+      sessionStorage.setItem('counted', '1');
+      fetch('/api/hit', { method: 'POST' }).catch(() => {});
+    }
+  } catch {}
 </script>

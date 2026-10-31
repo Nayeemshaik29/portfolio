@@ -6,6 +6,7 @@ import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostCard from '../components/PostCard.astro';
 import FreelanceBand from '../components/FreelanceBand.astro';
+import VisitorWall from '../components/VisitorWall.astro';
 import CountUp from '../components/react/CountUp';
 import { profile, moreRepos } from '../data/profile';
 import repos from '../data/repos.json';
@@ -161,6 +162,8 @@ const extra = moreRepos
       </div>
     </div>
   </section>
+
+  <VisitorWall />
 
   <!-- Contact -->
   <section id="contact" class="section-y pt-0">
