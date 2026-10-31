@@ -1,7 +1,8 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 
-const url = process.env.UPSTASH_REDIS_REST_URL;
-const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+// Accepts the names Vercel's Upstash integration sets (KV_*) or the plain Upstash ones.
+const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
 
 export const configured = () => Boolean(url && token);
 
