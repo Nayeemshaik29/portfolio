@@ -45,7 +45,6 @@ const extra = moreRepos
       <div class="reveal grid content-start gap-3" data-delay="120">
         {[
           { icon: 'cap', t: profile.education.degree, d: `${profile.education.school} · ${profile.education.period} · ${profile.education.detail}` },
-          ...profile.certifications.map((c) => ({ icon: c.name.includes('Ethical') ? 'shield' : 'award', t: c.name, d: c.issuer })),
           { icon: 'pin', t: profile.location, d: 'Open to on-site, hybrid & remote · any shift' },
         ].map((r) => (
           <div class="spotlight flex gap-4 rounded-2xl border bg-card/60 p-5 transition hover:border-white/20">
@@ -135,6 +134,29 @@ const extra = moreRepos
             <h3 class="font-mono text-xs tracking-widest text-muted-foreground uppercase">{g.group}</h3>
             <div class="mt-4 flex flex-wrap gap-2">
               {g.items.map((s) => <span class="rounded-full border bg-background/50 px-3 py-1 text-sm transition hover:border-white/30">{s}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Certifications -->
+  <section id="certifications" class="section-y">
+    <div class="container-x">
+      <div class="reveal">
+        <p class="eyebrow">Certifications</p>
+        <h2 class="h-section mt-5">Licenses &amp; <span class="text-metal">certifications</span></h2>
+      </div>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {profile.certifications.map((c, i) => (
+          <div class="spotlight reveal flex gap-4 rounded-2xl border bg-card/60 p-5 transition hover:border-white/20" data-delay={(i % 3) * 80}>
+            <span class="grid size-11 shrink-0 place-items-center rounded-xl border bg-secondary"><Icon name={/Ethical|Security/.test(c.name) ? 'shield' : 'award'} size={19} /></span>
+            <div>
+              <p class="font-medium">{c.name}</p>
+              <p class="text-sm text-muted-foreground">{c.issuer}</p>
+              {c.date && <p class="mt-1 font-mono text-xs text-muted-foreground">{c.date}</p>}
+              {c.id && <p class="font-mono text-xs text-muted-foreground">ID {c.id}</p>}
             </div>
           </div>
         ))}

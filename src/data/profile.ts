@@ -56,8 +56,14 @@ export const profile = {
     detail: 'CGPA 8.85',
   },
   certifications: [
-    { name: 'Certified Ethical Hacker (CEH v12)', issuer: 'EC-Council' },
-    { name: 'AWS Certified Cloud Practitioner', issuer: 'Amazon Web Services' },
+    { name: 'Claude Code 101', issuer: 'Anthropic', date: 'Issued Oct 2026', id: '' },
+    { name: 'Microsoft Certified: AI Business Professional', issuer: 'Microsoft', date: 'Issued Sep 2026 · Expires Sep 2027', id: '4DD68AF6586462AB' },
+    { name: 'Microsoft Certified: Security Operations Analyst Associate', issuer: 'Microsoft', date: 'Issued Jun 2026 · Expires Jun 2027', id: 'BEE1D7E2172B4273' },
+    { name: 'Microsoft Certified: Security, Compliance, and Identity Fundamentals', issuer: 'Microsoft', date: 'Issued Mar 2026 · Expires Apr 2027', id: 'B5610124D11F7746' },
+    { name: 'Certified Ethical Hacker (CEH v12)', issuer: 'EC-Council', date: 'Issued Mar 2024 · Expires Mar 2027', id: 'ECC4207613589' },
+    { name: 'AWS Certified Cloud Practitioner', issuer: 'Amazon Web Services', date: '', id: '' },
+    { name: 'Red Hat Certified Enterprise Application Developer', issuer: 'Red Hat', date: 'Issued Sep 2023 · Expired Sep 2026', id: '' },
+    { name: 'Become a Django Developer', issuer: 'LinkedIn Learning', date: 'Issued Sep 2022', id: '' },
   ],
   skills: [
     { group: 'Backend', items: ['Java', 'Spring Boot', 'Spring Cloud', 'Spring Security', 'JPA / Hibernate', 'REST APIs'] },
