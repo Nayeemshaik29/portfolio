@@ -10,7 +10,7 @@ const cols = [
 <footer class="relative mt-10 overflow-hidden border-t">
   <div class="container-x grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
     <div>
-      <a href="/" class="inline-flex items-center gap-2.5">
+      <a href="/" class="inline-flex min-h-11 items-center gap-2.5">
         <span class="grid size-8 place-items-center rounded-lg border bg-card font-mono text-[11px] font-bold">NS</span>
         <span class="font-medium">{profile.name}</span>
       </a>
@@ -23,7 +23,7 @@ const cols = [
           [`mailto:${profile.email}`, 'mail', 'Email'],
         ].map(([href, icon, label]) => (
           <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener" aria-label={label}
-            class="grid size-9 place-items-center rounded-full border text-muted-foreground transition hover:-translate-y-0.5 hover:text-foreground">
+            class="grid size-11 place-items-center rounded-full border text-muted-foreground transition hover:-translate-y-0.5 hover:text-foreground">
             <Icon name={icon} size={16} />
           </a>
         ))}
@@ -32,15 +32,15 @@ const cols = [
     {cols.map((c) => (
       <div>
         <p class="font-mono text-xs tracking-widest text-muted-foreground uppercase">{c.title}</p>
-        <ul class="mt-4 grid gap-2.5 text-sm">
-          {c.links.map(([l, h]) => <li><a href={h} class="text-muted-foreground transition hover:text-foreground">{l}</a></li>)}
+        <ul class="mt-2 grid text-sm">
+          {c.links.map(([l, h]) => <li><a href={h} class="inline-flex min-h-11 min-w-11 items-center text-muted-foreground transition hover:text-foreground">{l}</a></li>)}
         </ul>
       </div>
     ))}
   </div>
   <div class="container-x flex flex-wrap items-center justify-between gap-3 border-t py-6 text-xs text-muted-foreground">
-    <p>© {year} {profile.name}. Built with Astro, React Three Fiber and shadcn/ui.</p>
-    <a href="/rss.xml" class="font-mono hover:text-foreground">RSS</a>
+    <p>© {year} {profile.name}. Designed &amp; developed by {profile.name}. Built with Astro, React Three Fiber and shadcn/ui.</p>
+    <a href="/rss.xml" class="inline-flex min-h-11 min-w-11 items-center justify-center font-mono hover:text-foreground">RSS</a>
   </div>
   <p aria-hidden="true" class="pointer-events-none -mb-[0.22em] text-center text-[clamp(4rem,17vw,15rem)] leading-none font-bold tracking-tighter text-white/[0.035] select-none">NAYEEM</p>
 </footer>

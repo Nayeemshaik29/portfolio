@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sparkles } from '@react-three/drei';
+import { BufferAttribute, BufferGeometry, Vector3 } from 'three';
 import type { Group, Mesh } from 'three';
 
-type Variant = 'hero' | 'freelance';
+type Variant = 'hero' | 'freelance' | 'mesh' | 'gem';
 
 // Follows the pointer smoothly so the whole object leans toward the cursor.
 function Rig({ children }: { children: React.ReactNode }) {
@@ -81,6 +82,116 @@ function Knot() {
   );
 }
 
+
+// A rotating network of services with events (bright dots) travelling between them.
+function ServiceMesh() {
+  const { pts, edges, geo } = useMemo(() => {
+    const n = 24;
+    const golden = Math.PI * (3 - Math.sqrt(5));
+    const pts: Vector3[] = [];
+    for (let i = 0; i < n; i++) {
+      const y = 1 - (i / (n - 1)) * 2;
+      const r = Math.sqrt(1 - y * y);
+      pts.push(new Vector3(Math.cos(golden * i) * r, y, Math.sin(golden * i) * r).multiplyScalar(2));
+    }
+    const seen = new Set<string>();
+    const edges: [number, number][] = [];
+    pts.forEach((p, i) => {
+      pts
+        .map((q, j) => [j, p.distanceTo(q)] as const)
+        .filter(([j]) => j !== i)
+        .sort((a, b) => a[1] - b[1])
+        .slice(0, 3)
+        .forEach(([j]) => {
+          const k = i < j ? `${i}-${j}` : `${j}-${i}`;
+          if (!seen.has(k)) {
+            seen.add(k);
+            edges.push([i, j]);
+          }
+        });
+    });
+    const arr = new Float32Array(edges.length * 6);
+    edges.forEach(([a, b], e) => {
+      pts[a].toArray(arr, e * 6);
+      pts[b].toArray(arr, e * 6 + 3);
+    });
+    const geo = new BufferGeometry();
+    geo.setAttribute('position', new BufferAttribute(arr, 3));
+    return { pts, edges, geo };
+  }, []);
+
+  const dots = useRef<Mesh[]>([]);
+  const flow = useMemo(
+    () => Array.from({ length: 22 }, (_, i) => ({ e: (i * 7) % edges.length, t: (i * 0.137) % 1, s: 0.25 + ((i * 31) % 10) / 28 })),
+    [edges.length],
+  );
+  useFrame((_, d) => {
+    flow.forEach((f, i) => {
+      f.t += d * f.s;
+      if (f.t > 1) {
+        f.t = 0;
+        f.e = (f.e * 5 + 3 + i) % edges.length;
+      }
+      const [a, b] = edges[f.e];
+      dots.current[i]?.position.lerpVectors(pts[a], pts[b], f.t);
+    });
+  });
+
+  return (
+    <Float speed={1.1} rotationIntensity={0.3} floatIntensity={0.6}>
+      <Spin speed={0.12}>
+        <lineSegments geometry={geo}>
+          <lineBasicMaterial color="#d4d4d4" transparent opacity={0.28} />
+        </lineSegments>
+        {pts.map((p, i) => (
+          <mesh key={i} position={p} scale={i % 6 === 0 ? 1.9 : 1}>
+            <octahedronGeometry args={[0.1, 0]} />
+            <meshStandardMaterial color={i % 6 === 0 ? '#ffffff' : '#a8a8a8'} metalness={0.6} roughness={0.3} emissive="#ffffff" emissiveIntensity={i % 6 === 0 ? 0.9 : 0.15} />
+          </mesh>
+        ))}
+        {flow.map((_, i) => (
+          <mesh key={`f${i}`} ref={(m) => { if (m) dots.current[i] = m; }}>
+            <sphereGeometry args={[0.045, 12, 12]} />
+            <meshBasicMaterial color="#ffffff" />
+          </mesh>
+        ))}
+        <mesh>
+          <icosahedronGeometry args={[1.9, 1]} />
+          <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.035} />
+        </mesh>
+      </Spin>
+    </Float>
+  );
+}
+
+// A faceted metal gem with a wire shell and a slow orbiting ring.
+function Gem() {
+  return (
+    <Float speed={1.3} rotationIntensity={0.5} floatIntensity={0.8}>
+      <Spin speed={0.22}>
+        <mesh>
+          <dodecahedronGeometry args={[1.25, 0]} />
+          <meshStandardMaterial color="#c4c4c4" metalness={0.95} roughness={0.18} flatShading />
+        </mesh>
+        <mesh scale={1.35}>
+          <dodecahedronGeometry args={[1.25, 0]} />
+          <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.1} />
+        </mesh>
+      </Spin>
+      <Spin speed={0.3} axis="z">
+        <mesh rotation={[Math.PI / 2.3, 0.3, 0]}>
+          <torusGeometry args={[2.1, 0.008, 16, 200]} />
+          <meshBasicMaterial color="#e5e5e5" transparent opacity={0.4} />
+        </mesh>
+        <mesh position={[2.1, 0, 0]} rotation={[0.6, 0.4, 0]}>
+          <octahedronGeometry args={[0.1, 0]} />
+          <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1.4} />
+        </mesh>
+      </Spin>
+    </Float>
+  );
+}
+
 function hasWebGL() {
   try {
     const c = document.createElement('canvas');
@@ -131,7 +242,7 @@ export default function Scene3D({ variant = 'hero' }: { variant?: Variant }) {
           <directionalLight position={[4, 5, 3]} intensity={2.2} color="#ffffff" />
           <directionalLight position={[-5, -2, -3]} intensity={0.9} color="#a3a3a3" />
           <pointLight position={[0, 0, 4]} intensity={6} color="#f5f5f5" distance={10} />
-          <Rig>{variant === 'hero' ? <Core /> : <Knot />}</Rig>
+          <Rig>{variant === 'hero' ? <Core /> : variant === 'mesh' ? <ServiceMesh /> : variant === 'gem' ? <Gem /> : <Knot />}</Rig>
           <Sparkles count={variant === 'hero' ? 90 : 60} scale={[9, 6, 4]} size={1.6} speed={0.3} opacity={0.5} color="#e5e5e5" />
         </Canvas>
       )}

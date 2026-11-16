@@ -16,7 +16,7 @@ const onFreelance = path.startsWith('/freelance');
 <header class="sticky top-0 z-50 pt-3" data-header>
   <div class="container-x">
     <div class="flex h-14 items-center justify-between gap-3 rounded-full border border-transparent px-2 pl-4 transition-all duration-300 [[data-scrolled]_&]:border-border [[data-scrolled]_&]:bg-background/70 [[data-scrolled]_&]:shadow-2xl [[data-scrolled]_&]:backdrop-blur-xl">
-      <a href="/" class="group flex items-center gap-2.5" aria-label={`${profile.name} — home`}>
+      <a href="/" class="group flex min-h-11 min-w-11 items-center justify-center gap-2.5" aria-label={`${profile.name} — home`}>
         <span class="grid size-8 place-items-center rounded-lg border bg-card font-mono text-[11px] font-bold transition group-hover:rotate-6">NS</span>
         <span class="hidden font-medium tracking-tight sm:inline">{profile.name}</span>
       </a>

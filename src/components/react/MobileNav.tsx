@@ -10,7 +10,7 @@ export default function MobileNav({ items, path }: { items: Item[]; path: string
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Open menu" className="md:hidden">
+        <Button variant="ghost" size="icon" aria-label="Open menu" className="size-11 md:hidden">
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>

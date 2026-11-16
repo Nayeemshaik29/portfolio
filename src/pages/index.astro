@@ -8,6 +8,7 @@ import PostCard from '../components/PostCard.astro';
 import FreelanceBand from '../components/FreelanceBand.astro';
 import VisitorWall from '../components/VisitorWall.astro';
 import CountUp from '../components/react/CountUp';
+import Scene3D from '../components/react/Scene3D';
 import { profile, moreRepos } from '../data/profile';
 import repos from '../data/repos.json';
 import { readingMinutes } from '../lib/reading';
@@ -28,7 +29,7 @@ const extra = moreRepos
   <section id="about" class="section-y">
     <div class="container-x grid gap-12 lg:grid-cols-[1.3fr_1fr]">
       <div class="reveal">
-        <p class="eyebrow">01 · About</p>
+        <p class="eyebrow">About</p>
         <h2 class="h-section mt-5">Backend engineer with a <span class="text-metal">security mindset</span>.</h2>
         <div class="mt-6 grid gap-4 text-lg text-muted-foreground">
           {profile.about.map((p) => <p>{p}</p>)}
@@ -60,7 +61,7 @@ const extra = moreRepos
   <section id="experience" class="section-y border-y bg-card/20">
     <div class="container-x">
       <div class="reveal">
-        <p class="eyebrow">02 · Experience</p>
+        <p class="eyebrow">Experience</p>
         <h2 class="h-section mt-5">Where I've worked</h2>
       </div>
       <ol class="relative mt-12 grid gap-6 before:absolute before:top-2 before:bottom-2 before:left-[7px] before:w-px before:bg-gradient-to-b before:from-white/40 before:to-transparent md:before:left-[183px]">
@@ -86,14 +87,14 @@ const extra = moreRepos
     <div class="container-x">
       <div class="reveal flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p class="eyebrow">03 · Work</p>
+          <p class="eyebrow">Work</p>
           <h2 class="h-section mt-5">Systems I've designed and built</h2>
           <p class="lead">Production-style projects focused on correctness, resilience and clean service boundaries, each with an architecture write-up.</p>
         </div>
         <div class="flex max-w-full gap-1 overflow-x-auto rounded-full border bg-card/70 p-1" role="group" aria-label="Filter projects">
           {categories.map((c, i) => (
             <button type="button" data-filter={c} aria-pressed={i === 0 ? 'true' : 'false'}
-              class="shrink-0 rounded-full px-4 py-1.5 text-sm text-muted-foreground transition hover:text-foreground aria-pressed:bg-primary aria-pressed:text-primary-foreground">{c}</button>
+              class="inline-flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm text-muted-foreground transition hover:text-foreground aria-pressed:bg-primary aria-pressed:text-primary-foreground">{c}</button>
           ))}
         </div>
       </div>
@@ -116,7 +117,7 @@ const extra = moreRepos
             </a>
           ))}
         </div>
-        <a href={profile.links.github} target="_blank" rel="noopener" class="mt-6 inline-flex h-10 items-center gap-2 rounded-full border px-5 text-sm font-medium transition hover:bg-accent"><Icon name="github" size={16} /> All 40 repositories</a>
+        <a href={profile.links.github} target="_blank" rel="noopener" class="mt-6 inline-flex h-11 items-center gap-2 rounded-full border px-5 text-sm font-medium transition hover:bg-accent"><Icon name="github" size={16} /> All 40 repositories</a>
       </div>
     </div>
   </section>
@@ -124,9 +125,17 @@ const extra = moreRepos
   <!-- Skills -->
   <section id="skills" class="section-y border-y bg-card/20">
     <div class="container-x">
-      <div class="reveal">
-        <p class="eyebrow">04 · Stack</p>
-        <h2 class="h-section mt-5">Tech I work with</h2>
+      <div class="grid items-center gap-4 lg:grid-cols-[1.1fr_1fr]">
+        <div class="reveal">
+          <p class="eyebrow">Stack</p>
+          <h2 class="h-section mt-5">Tech I work with</h2>
+          <p class="lead">Services that talk to each other through events, and keep working when one of them doesn't.</p>
+        </div>
+        <div class="pointer-events-none relative h-[260px] sm:h-[320px] lg:pointer-events-auto" data-scene>
+          <Scene3D client:only="react" variant="mesh">
+            <div slot="fallback" class="size-full"></div>
+          </Scene3D>
+        </div>
       </div>
       <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {profile.skills.map((g, i) => (
@@ -144,9 +153,16 @@ const extra = moreRepos
   <!-- Certifications -->
   <section id="certifications" class="section-y">
     <div class="container-x">
-      <div class="reveal">
-        <p class="eyebrow">Certifications</p>
-        <h2 class="h-section mt-5">Licenses &amp; <span class="text-metal">certifications</span></h2>
+      <div class="grid items-center gap-4 lg:grid-cols-[1.1fr_1fr]">
+        <div class="reveal">
+          <p class="eyebrow">Certifications</p>
+          <h2 class="h-section mt-5">Licenses &amp; <span class="text-metal">certifications</span></h2>
+        </div>
+        <div class="pointer-events-none relative h-[220px] sm:h-[260px] lg:pointer-events-auto" data-scene>
+          <Scene3D client:only="react" variant="gem">
+            <div slot="fallback" class="size-full"></div>
+          </Scene3D>
+        </div>
       </div>
       <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {profile.certifications.map((c, i) => (
@@ -171,11 +187,11 @@ const extra = moreRepos
     <div class="container-x">
       <div class="reveal flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p class="eyebrow">05 · Writing</p>
+          <p class="eyebrow">Writing</p>
           <h2 class="h-section mt-5">Notes from building things</h2>
           <p class="lead">Deep dives into the problems I hit while building these systems, and how I solved them.</p>
         </div>
-        <a href="/blog" class="inline-flex h-10 items-center gap-2 rounded-full border px-5 text-sm font-medium transition hover:bg-accent">All posts <Icon name="arrow" size={15} /></a>
+        <a href="/blog" class="inline-flex h-11 items-center gap-2 rounded-full border px-5 text-sm font-medium transition hover:bg-accent">All posts <Icon name="arrow" size={15} /></a>
       </div>
       <div class="mt-12 grid gap-5 md:grid-cols-3">
         {posts.map((p, i) => (
