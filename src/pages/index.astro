@@ -8,6 +8,7 @@ import PostCard from '../components/PostCard.astro';
 import FreelanceBand from '../components/FreelanceBand.astro';
 import VisitorWall from '../components/VisitorWall.astro';
 import CountUp from '../components/react/CountUp';
+import Scene3D from '../components/react/Scene3D';
 import { profile, moreRepos } from '../data/profile';
 import repos from '../data/repos.json';
 import { readingMinutes } from '../lib/reading';
@@ -124,9 +125,17 @@ const extra = moreRepos
   <!-- Skills -->
   <section id="skills" class="section-y border-y bg-card/20">
     <div class="container-x">
-      <div class="reveal">
-        <p class="eyebrow">Stack</p>
-        <h2 class="h-section mt-5">Tech I work with</h2>
+      <div class="grid items-center gap-4 lg:grid-cols-[1.1fr_1fr]">
+        <div class="reveal">
+          <p class="eyebrow">Stack</p>
+          <h2 class="h-section mt-5">Tech I work with</h2>
+          <p class="lead">Services that talk to each other through events, and keep working when one of them doesn't.</p>
+        </div>
+        <div class="pointer-events-none relative h-[260px] sm:h-[320px] lg:pointer-events-auto" data-scene>
+          <Scene3D client:only="react" variant="mesh">
+            <div slot="fallback" class="size-full"></div>
+          </Scene3D>
+        </div>
       </div>
       <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {profile.skills.map((g, i) => (
@@ -144,9 +153,16 @@ const extra = moreRepos
   <!-- Certifications -->
   <section id="certifications" class="section-y">
     <div class="container-x">
-      <div class="reveal">
-        <p class="eyebrow">Certifications</p>
-        <h2 class="h-section mt-5">Licenses &amp; <span class="text-metal">certifications</span></h2>
+      <div class="grid items-center gap-4 lg:grid-cols-[1.1fr_1fr]">
+        <div class="reveal">
+          <p class="eyebrow">Certifications</p>
+          <h2 class="h-section mt-5">Licenses &amp; <span class="text-metal">certifications</span></h2>
+        </div>
+        <div class="pointer-events-none relative h-[220px] sm:h-[260px] lg:pointer-events-auto" data-scene>
+          <Scene3D client:only="react" variant="gem">
+            <div slot="fallback" class="size-full"></div>
+          </Scene3D>
+        </div>
       </div>
       <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {profile.certifications.map((c, i) => (
